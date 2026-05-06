@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
+    <title>notdistraught — Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+      :root {
+        --green: #1d9e75;
+        --green2: #5dcaa5;
+        --green-bg: rgba(29, 158, 117, 0.12);
+        --green-bd: rgba(29, 158, 117, 0.25);
+        --blue: #378add;
+        --blue-bg: rgba(55, 138, 221, 0.12);
+        --blue-bd: rgba(55, 138, 221, 0.25);
+        --red: #e24b4a;
+        --red2: #f09595;
+        --red-bg: rgba(226, 75, 74, 0.12);
+        --red-bd: rgba(226, 75, 74, 0.25);
+        --amber: #fac775;
+        --amber-bg: rgba(250, 199, 117, 0.12);
+        --amber-bd: rgba(250, 199, 117, 0.25);
+        --orange-bg: rgba(216, 90, 48, 0.12);
+        --orange-bd: rgba(216, 90, 48, 0.25);
+        --bg: #080808;
+        --bg2: #111;
+        --bg3: #181818;
+        --bg4: #202020;
+        --border: rgba(255, 255, 255, 0.07);
+        --border2: rgba(255, 255, 255, 0.12);
+        --text: #f2f2f2;
+        --text2: #888;
+        --text3: #444;
+        --r: 14px;
+        --r-sm: 10px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        font-size: 16px;
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 0 0 40px;
+      }
+
+      .header {
+        padding: 18px 16px 14px;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 10;
+      }
+      .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .brand-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .brand-logo {
+        width: 38px;
+        height: 38px;
+        border-radius: var(--r-sm);
+        background: linear-gradient(135deg, var(--green), #085041);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Syne', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: 1px;
+        flex-shrink: 0;
+      }
+      .brand-name {
+        font-family: 'Syne', sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text);
+      }
+      .brand-sub {
+        font-size: 10px;
+        color: var(--text3);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-top: 1px;
+      }
+      .refresh-btn {
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--border2);
+        border-radius: var(--r-sm);
+        background: var(--bg3);
+        color: var(--text2);
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .period-group {
+        display: flex;
+        background: var(--bg3);
+        border-radius: var(--r-sm);
+        padding: 3px;
+        border: 1px solid var(--border);
+      }
+      .period-btn {
+        flex: 1;
+        padding: 8px 0;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--text3);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .period-btn.active {
+        background: var(--green);
+        color: #fff;
+      }
+
+      .content {
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .mc {
+        border-radius: var(--r);
+        padding: 14px 14px 12px;
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+      }
+      .mc-order {
+        background: #0c2a1c;
+        border-color: var(--green-bd);
+      }
+      .mc-income {
+        background: #0c1e30;
+        border-color: var(--blue-bd);
+      }
+      .mc-cut {
+        background: #2a0c0c;
+        border-color: var(--red-bd);
+      }
+      .mc-profit {
+        background: #102208;
+        border-color: var(--green-bd);
+      }
+      .mc-icon {
+        font-size: 18px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .mc-label {
+        font-size: 10px;
+        color: var(--text2);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 4px;
+        line-height: 1.3;
+      }
+      .mc-value {
+        font-family: 'Syne', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.1;
+        margin-bottom: 5px;
+      }
+      .mc-change {
+        font-size: 10px;
+        font-weight: 500;
+      }
+      .chg-up {
+        color: var(--green2);
+      }
+      .chg-down {
+        color: var(--red2);
+      }
+      .chg-neutral {
+        color: var(--text3);
+      }
+
+      .pills {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 2px;
+      }
+      .pills::-webkit-scrollbar {
+        display: none;
+      }
+      .pill {
+        padding: 5px 11px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .pill-green {
+        background: var(--green-bg);
+        color: var(--green2);
+        border: 1px solid var(--green-bd);
+      }
+      .pill-red {
+        background: var(--red-bg);
+        color: var(--red2);
+        border: 1px solid var(--red-bd);
+      }
+      .pill-blue {
+        background: var(--blue-bg);
+        color: var(--blue);
+        border: 1px solid var(--blue-bd);
+      }
+      .pill-amber {
+        background: var(--amber-bg);
+        color: var(--amber);
+        border: 1px solid var(--amber-bd);
+      }
+
+      .card {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 16px;
+      }
+      .card-title {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text3);
+        margin-bottom: 14px;
+      }
+      .chart-wrap {
+        position: relative;
+        width: 100%;
+        height: 180px;
+      }
+
+      .produk-row {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .produk-row:last-child {
+        border-bottom: none;
+      }
+      .rank {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+      .rank-1 {
+        background: rgba(250, 199, 117, 0.18);
+        color: var(--amber);
+        border: 1px solid var(--amber-bd);
+      }
+      .rank-2 {
+        background: rgba(180, 178, 169, 0.15);
+        color: #b4b2a9;
+        border: 1px solid rgba(180, 178, 169, 0.2);
+      }
+      .rank-3 {
+        background: rgba(240, 153, 123, 0.15);
+        color: #f0997b;
+        border: 1px solid rgba(240, 153, 123, 0.2);
+      }
+      .rank-n {
+        background: var(--bg3);
+        color: var(--text3);
+        border: 1px solid var(--border);
+      }
+      .produk-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .produk-name {
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .produk-sub {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 1px;
+      }
+      .produk-val {
+        font-family: 'Syne', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--green2);
+        flex-shrink: 0;
+        margin-left: 8px;
+      }
+
+      .platform-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .platform-row:last-child {
+        border-bottom: none;
+      }
+      .platform-label {
+        font-size: 12px;
+        color: var(--text2);
+        min-width: 58px;
+        font-weight: 500;
+      }
+      .platform-bar-bg {
+        flex: 1;
+        height: 8px;
+        background: var(--bg3);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .platform-bar-fill {
+        height: 100%;
+        border-radius: 4px;
+      }
+      .platform-pct {
+        font-family: 'Syne', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        min-width: 34px;
+        text-align: right;
+      }
+
+      .qs-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .qs-row:last-child {
+        border-bottom: none;
+      }
+      .qs-label {
+        font-size: 12px;
+        color: var(--text2);
+      }
+      .qs-val {
+        font-family: 'Syne', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .history-item {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .history-item:last-child {
+        border-bottom: none;
+      }
+      .history-left {
+        flex: 1;
+        min-width: 0;
+      }
+      .history-name {
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .history-sub {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+      .badge {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+      .badge-tiktok {
+        background: var(--blue-bg);
+        color: var(--blue);
+        border: 1px solid var(--blue-bd);
+      }
+      .badge-shopee {
+        background: var(--orange-bg);
+        color: #f0997b;
+        border: 1px solid var(--orange-bd);
+      }
+      .history-right {
+        text-align: right;
+        flex-shrink: 0;
+        margin-left: 12px;
+        padding-top: 2px;
+      }
+      .h-untung {
+        font-family: 'Syne', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--green2);
+      }
+      .h-rugi {
+        font-family: 'Syne', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--red2);
+      }
+      .h-total {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+
+      .empty-msg {
+        color: var(--text3);
+        font-size: 13px;
+        padding: 20px 0;
+        text-align: center;
+      }
+      .loading-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        gap: 14px;
+      }
+      .loader {
+        width: 32px;
+        height: 32px;
+        border: 2px solid var(--border2);
+        border-top-color: var(--green);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-text {
+        font-size: 13px;
+        color: var(--text3);
+      }
+      .last-updated {
+        font-size: 10px;
+        color: var(--text3);
+        text-align: center;
+        padding-top: 4px;
+        letter-spacing: 0.3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-top">
+        <div class="brand-wrap">
+          <div class="brand-logo">ND</div>
+          <div>
+            <div class="brand-name">notdistraught</div>
+            <div class="brand-sub">Sales Dashboard</div>
+          </div>
+        </div>
+        <button class="refresh-btn" onclick="loadData()">↻</button>
+      </div>
+      <div class="period-group">
+        <button class="period-btn active" onclick="setPeriod('hari', this)">Hari ini</button>
+        <button class="period-btn" onclick="setPeriod('minggu', this)">Minggu ini</button>
+        <button class="period-btn" onclick="setPeriod('bulan', this)">Bulan ini</button>
+      </div>
+    </div>
+
+    <div id="loading-screen" class="loading-wrap">
+      <div class="loader"></div>
+      <div class="loading-text">Memuat data penjualan...</div>
+    </div>
+
+    <div id="dashboard" style="display: none">
+      <div class="content">
+        <div class="metrics-grid" id="metrics-grid"></div>
+        <div class="pills" id="pills-bar"></div>
+        <div class="card">
+          <div class="card-title">Tren Keuntungan Bersih</div>
+          <div class="chart-wrap"><canvas id="trendChart" role="img" aria-label="Grafik tren keuntungan bersih">Grafik tren keuntungan.</canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Produk Terlaris</div>
+          <div id="produk-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Platform</div>
+          <div id="platform-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Ringkasan Cepat</div>
+          <div id="quick-summary"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Riwayat Order Terbaru</div>
+          <div id="history-list"></div>
+        </div>
+        <div class="last-updated" id="last-updated"></div>
+      </div>
+    </div>
+
+    <script>
+      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1345114316&single=true&output=csv';
+      let allOrders = [],
+        currentPeriod = 'hari',
+        trendChart = null;
+
+      // Helper parse angka — strip Rp, titik, koma
+      function parseNum(val) {
+        return (
+          parseFloat(
+            (val || '')
+              .toString()
+              .replace(/[Rp.\s]/g, '')
+              .replace(/,/g, ''),
+          ) || 0
+        );
+      }
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        const headers = lines[0].split(',').map((h) => h.trim().replace(/"/g, ''));
+        return lines
+          .slice(1)
+          .map((line) => {
+            const vals = [];
+            let cur = '',
+              inQ = false;
+            for (let c of line) {
+              if (c === '"') inQ = !inQ;
+              else if (c === ',' && !inQ) {
+                vals.push(cur);
+                cur = '';
+              } else cur += c;
+            }
+            vals.push(cur);
+            const obj = {};
+            headers.forEach((h, i) => (obj[h] = (vals[i] || '').replace(/"/g, '').trim()));
+            return obj;
+          })
+          .filter((o) => o['Tanggal']);
+      }
+
+      function parseDate(str) {
+        if (!str) return null;
+        const p = str.split(' ')[0];
+        let d, m, y;
+        if (p.includes('/')) [d, m, y] = p.split('/');
+        else [y, m, d] = p.split('-');
+        return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+      }
+
+      function filterByPeriod(orders, period, offset = 0) {
+        const now = new Date();
+        return orders.filter((o) => {
+          const d = parseDate(o['Tanggal']);
+          if (!d) return false;
+          if (period === 'hari') {
+            const t = new Date(now);
+            t.setDate(now.getDate() - offset);
+            return d.toDateString() === t.toDateString();
+          }
+          if (period === 'minggu') {
+            const s = new Date(now);
+            s.setDate(now.getDate() - 7 * (offset + 1) + 1);
+            const e = new Date(now);
+            e.setDate(now.getDate() - 7 * offset);
+            return d >= s && d <= e;
+          }
+          if (period === 'bulan') {
+            const t = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+            return d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
+          }
+          return false;
+        });
+      }
+
+      function fmt(num) {
+        num = Math.round(num);
+        if (num >= 1000000) return 'Rp' + (num / 1000000).toFixed(1) + 'Jt';
+        if (num >= 1000) return 'Rp' + Math.round(num / 1000) + 'K';
+        return 'Rp' + num;
+      }
+
+      function pctChange(curr, prev) {
+        if (prev === 0) return curr > 0 ? { txt: '+100%', dir: 1 } : { txt: '0%', dir: 0 };
+        const pct = Math.round(((curr - prev) / prev) * 100);
+        return { txt: (pct >= 0 ? '+' : '') + pct + '%', dir: pct >= 0 ? 1 : -1 };
+      }
+
+      function sum(orders, col) {
+        return orders.reduce((s, o) => s + parseNum(o[col]), 0);
+      }
+
+      function render() {
+        const curr = filterByPeriod(allOrders, currentPeriod, 0);
+        const prev = filterByPeriod(allOrders, currentPeriod, 1);
+        const cU = sum(curr, 'Untung Bersih'),
+          pU = sum(prev, 'Untung Bersih');
+        const cP = sum(curr, 'Pendapatan Bersih'),
+          pP = sum(prev, 'Pendapatan Bersih');
+        const cPot = sum(curr, 'Potongan Platform'),
+          pPot = sum(prev, 'Potongan Platform');
+        const cHPP = sum(curr, 'HPP');
+
+        const metrics = [
+          { label: 'Total Order', value: curr.length, prev: prev.length, isCount: true, cls: 'mc-order', icon: '🛍️' },
+          { label: 'Pendapatan', value: cP, prev: pP, cls: 'mc-income', icon: '💰' },
+          { label: 'Potongan', value: cPot, prev: pPot, cls: 'mc-cut', icon: '✂️', invert: true },
+          { label: 'Keuntungan', value: cU, prev: pU, cls: 'mc-profit', icon: '📈' },
+        ];
+
+        document.getElementById('metrics-grid').innerHTML = metrics
+          .map((m) => {
+            const chg = pctChange(m.value, m.prev);
+            const isUp = chg.dir > 0;
+            const good = m.invert ? !isUp : isUp;
+            const cls = chg.dir === 0 ? 'chg-neutral' : good ? 'chg-up' : 'chg-down';
+            const arrow = chg.dir === 0 ? '—' : isUp ? '▲' : '▼';
+            return `<div class="mc ${m.cls}">
+      <span class="mc-icon">${m.icon}</span>
+      <div class="mc-label">${m.label}</div>
+      <div class="mc-value">${m.isCount ? curr.length : fmt(m.value)}</div>
+      <div class="mc-change ${cls}">${arrow} ${chg.txt}</div>
+    </div>`;
+          })
+          .join('');
+
+        const margin = cP > 0 ? Math.round((cU / cP) * 100) : 0;
+        const terjual = curr.reduce((s, o) => s + parseNum(o['Jumlah']), 0);
+        document.getElementById('pills-bar').innerHTML = `
+    <span class="pill pill-green">Margin ${margin}%</span>
+    <span class="pill ${cPot > 0 ? 'pill-red' : 'pill-blue'}">Potongan ${fmt(cPot)}</span>
+    <span class="pill pill-amber">HPP ${fmt(cHPP)}</span>
+    <span class="pill pill-blue">${terjual} item terjual</span>
+    <span class="pill ${cU >= pU ? 'pill-green' : 'pill-red'}">${cU >= pU ? '↑' : '↓'} vs lalu</span>
+  `;
+
+        renderTrend(curr);
+        renderProduk(curr);
+        renderPlatform(curr);
+        renderQuick(curr, prev, cU, pU);
+        renderHistory(curr);
+      }
+
+      function renderTrend(curr) {
+        const byDay = {};
+        curr.forEach((o) => {
+          const d = parseDate(o['Tanggal']);
+          if (!d) return;
+          const key = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+          byDay[key] = (byDay[key] || 0) + parseNum(o['Untung Bersih']);
+        });
+        const entries = Object.entries(byDay);
+        const labels = entries.length ? entries.map((x) => x[0]) : ['(kosong)'];
+        const data = entries.length ? entries.map((x) => Math.round(x[1])) : [0];
+        const colors = data.map((v) => (v >= 0 ? '#1D9E75' : '#E24B4A'));
+        if (trendChart) trendChart.destroy();
+        trendChart = new Chart(document.getElementById('trendChart'), {
+          type: 'bar',
+          data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }] },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { ticks: { callback: (v) => fmt(v), font: { size: 10 }, color: '#444' }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'transparent' } },
+              x: { ticks: { font: { size: 10 }, color: '#444', autoSkip: false, maxRotation: 45 }, grid: { display: false }, border: { color: 'transparent' } },
+            },
+          },
+        });
+      }
+
+      function renderProduk(curr) {
+        const byP = {};
+        curr.forEach((o) => {
+          const k = o['Nama Produk'] || 'Unknown';
+          if (!byP[k]) byP[k] = { untung: 0, pcs: 0 };
+          byP[k].untung += parseNum(o['Untung Bersih']);
+          byP[k].pcs += parseNum(o['Jumlah']);
+        });
+        const sorted = Object.entries(byP)
+          .sort((a, b) => b[1].untung - a[1].untung)
+          .slice(0, 5);
+        const rankCls = ['rank-1', 'rank-2', 'rank-3', 'rank-n', 'rank-n'];
+        document.getElementById('produk-list').innerHTML = sorted.length
+          ? sorted
+              .map(
+                ([name, d], i) => `<div class="produk-row">
+        <div class="rank ${rankCls[i]}">${i + 1}</div>
+        <div class="produk-info"><div class="produk-name">${name}</div><div class="produk-sub">${Math.round(d.pcs)} pcs terjual</div></div>
+        <div class="produk-val">${fmt(d.untung)}</div>
+      </div>`,
+              )
+              .join('')
+          : '<div class="empty-msg">Belum ada data</div>';
+      }
+
+      function renderPlatform(curr) {
+        const byP = {};
+        curr.forEach((o) => {
+          const k = o['Platform'] || 'Lainnya';
+          byP[k] = (byP[k] || 0) + 1;
+        });
+        const total = curr.length || 1;
+        const colors = { TikTok: '#378ADD', Shopee: '#D85A30' };
+        const entries = Object.entries(byP).sort((a, b) => b[1] - a[1]);
+        document.getElementById('platform-list').innerHTML = entries.length
+          ? entries
+              .map(([p, c]) => {
+                const pct = Math.round((c / total) * 100);
+                return `<div class="platform-row">
+        <div class="platform-label">${p}</div>
+        <div class="platform-bar-bg"><div class="platform-bar-fill" style="width:${pct}%;background:${colors[p] || '#888'}"></div></div>
+        <div class="platform-pct">${pct}%</div>
+      </div>`;
+              })
+              .join('')
+          : '<div class="empty-msg">Belum ada data</div>';
+      }
+
+      function renderQuick(curr, prev, cU, pU) {
+        const diff = Math.round(cU - pU);
+        const terjual = curr.reduce((s, o) => s + parseNum(o['Jumlah']), 0);
+        const avg = curr.length ? Math.round(cU / curr.length) : 0;
+        document.getElementById('quick-summary').innerHTML = `
+    <div class="qs-row"><span class="qs-label">vs periode sebelumnya</span><span class="qs-val" style="color:${diff >= 0 ? '#5DCAA5' : '#F09595'}">${diff >= 0 ? '+' : ''}${fmt(diff)}</span></div>
+    <div class="qs-row"><span class="qs-label">Total item terjual</span><span class="qs-val">${terjual} pcs</span></div>
+    <div class="qs-row"><span class="qs-label">Rata-rata per order</span><span class="qs-val">${fmt(avg)}</span></div>
+    <div class="qs-row"><span class="qs-label">Jumlah transaksi</span><span class="qs-val">${curr.length}</span></div>
+  `;
+      }
+
+      function renderHistory(curr) {
+        document.getElementById('history-list').innerHTML = curr.slice(0, 10).length
+          ? curr
+              .slice(0, 10)
+              .map((o) => {
+                const u = parseNum(o['Untung Bersih']);
+                const platCls = o['Platform'] === 'TikTok' ? 'badge-tiktok' : 'badge-shopee';
+                return `<div class="history-item">
+          <div class="history-left">
+            <div class="history-name">${o['Nama Produk'] || '-'}</div>
+            <div class="history-sub">${o['Varian'] || ''} · ${o['Jumlah'] || 0} pcs</div>
+            <span class="badge ${platCls}">${o['Platform'] || ''}</span>
+          </div>
+          <div class="history-right">
+            <div class="${u >= 0 ? 'h-untung' : 'h-rugi'}">${u >= 0 ? '+' : ''}${fmt(u)}</div>
+            <div class="h-total">${fmt(parseNum(o['Pendapatan Bersih']))}</div>
+          </div>
+        </div>`;
+              })
+              .join('')
+          : '<div class="empty-msg">Belum ada order di periode ini</div>';
+      }
+
+      function setPeriod(p, btn) {
+        currentPeriod = p;
+        document.querySelectorAll('.period-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        render();
+      }
+
+      async function loadData() {
+        document.getElementById('loading-screen').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'none';
+        try {
+          const res = await fetch(CSV_URL);
+          const text = await res.text();
+          allOrders = parseCSV(text);
+          document.getElementById('last-updated').textContent = 'Diperbarui: ' + new Date().toLocaleString('id-ID');
+          document.getElementById('loading-screen').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          render();
+        } catch (e) {
+          document.getElementById('loading-screen').innerHTML = '<div class="loading-text" style="color:#F09595">Gagal memuat data.</div>';
+        }
+      }
+      loadData();
+    </script>
+  </body>
+</html>
