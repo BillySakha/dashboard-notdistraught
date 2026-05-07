@@ -1291,7 +1291,8 @@
 
           if (!month || !year) return;
 
-          const revenue = num(row.pendapatan || row.revenue || row.total_pendapatan || row.total_revenue || 0);
+          // Tambahkan row.total_pendapatan_kotor
+          const revenue = num(row.total_pendapatan_kotor || row.pendapatan || row.revenue || row.total_pendapatan || row.total_revenue || 0);
           const profit = num(row.keuntungan || row.keuntungan_bersih || row.net_profit || row.profit || row.laba_bersih || 0);
           const orders = num(row.pesanan || row.total_pesanan || row.orders || row.jumlah_pesanan || 0);
           const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
@@ -1751,8 +1752,8 @@
 
         const items = stock
           .map((s) => {
-            const name = s.product_name || s.nama_produk || s.name || s.produk || s.item || Object.values(s)[0] || 'Tidak diketahui';
-            const qty = num(s.stock || s.qty || s.quantity || s.stok || s.jumlah || Object.values(s)[1] || 0);
+            const name = s.nama_produk || s.product_name || s.name || s.produk || s.item || 'Tidak diketahui'; // Tambahkan s.stok_sisa
+            const qty = num(s.stok_sisa || s.stock || s.qty || s.quantity || s.stok || s.jumlah || 0);
             const isLow = qty <= LOW_STOCK_THRESHOLD;
             const barPct = Math.min(100, (qty / 100) * 100);
             return { name, qty, isLow, barPct };
