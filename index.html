@@ -1835,7 +1835,10 @@
       <div class="tx-item">
         <div class="tx-avatar ${cls}">${icon}</div>
         <div class="tx-body">
-          <div class="tx-name">${name} (x${o._qty})</div>
+          <div style="display: flex; align-items: center; gap: 8px; width: 100%;">
+            <span class="tx-name" style="flex: 1;">${name}</span>
+            <span style="font-size: 11px; font-weight: 700; background: var(--surface-2); color: var(--text-secondary); padding: 2px 8px; border-radius: 4px; flex-shrink: 0;">x${o._qty}</span>
+          </div>
           <div class="tx-date">${dateStr} · ${dn}</div>
         </div>
         <div class="tx-right">
