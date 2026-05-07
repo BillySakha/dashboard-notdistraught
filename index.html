@@ -1025,6 +1025,57 @@
         return sign + 'Rp ' + abs.toFixed(0);
       }
 
+      // process data
+      // ════════════════════════════════════════════════
+      // FUNGSI PROSES DATA (TAMBAHKAN INI)
+      // ════════════════════════════════════════════════
+      function processData() {
+        // 1. Pemetaan HPP [cite: 751-752]
+        state.hppMap = {};
+        state.raw.products.forEach((p) => {
+          const name = (p.product_name || p.nama_produk || p.name || p.produk || '').toLowerCase();
+          const hpp = num(p.hpp || p.cost || p.cogs || p.harga_pokok || 0);
+          if (name) state.hppMap[name] = hpp;
+        });
+
+        // 2. Perkaya data order (Enrichment) [cite: 753-755]
+        state.raw.orders = state.raw.orders
+          .map((o) => {
+            const date = parseDate(o.date || o.tanggal || o.order_date || o.tgl);
+            const revenue = num(o.revenue || o.total || o.harga_jual || o.amount || o.sales || 0);
+            const qty = num(o.qty || o.quantity || o.jumlah || 1);
+            const platform = (o.platform || o.source || o.channel || '').toLowerCase();
+            const prodKey = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
+
+            let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
+            if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
+
+            const platformFee = revenue * PLATFORM_FEE;
+            const netProfit = revenue - hpp - platformFee;
+
+            return {
+              ...o,
+              _date: date,
+              _revenue: revenue,
+              _hpp: hpp,
+              _qty: qty,
+              _platform: platform,
+              _platformFee: platformFee,
+              _netProfit: netProfit,
+            };
+          })
+          .filter((o) => o._date && o._revenue > 0);
+
+        // 3. Deteksi tahun yang tersedia & pilih tahun terbaru [cite: 756-757]
+        state.availableYears = [...new Set(state.raw.orders.map((o) => o._date.getFullYear()))].sort((a, b) => a - b);
+        const latestYear = state.availableYears[state.availableYears.length - 1] || new Date().getFullYear();
+        state.selectedYear = latestYear;
+        state.selectedMonth = null;
+
+        // 4. Bangun UI Periode [cite: 757]
+        buildPeriodUI();
+      }
+      // =======
       // ════════════════════════════════════════════════
       // FETCH
       // ════════════════════════════════════════════════
