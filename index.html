@@ -1322,7 +1322,7 @@
             // HPP & net profit for Orders tab display only
             let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
             if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
-            const _netProfit = revenue - hpp - revenue * 0.15;
+            const _netProfit = (revenue - hpp - revenue * 0.15) * qty;
             return { ...o, _date: date, _revenue: revenue, _hpp: hpp, _qty: qty, _platform: platform, _netProfit: _netProfit };
           })
           .filter((o) => o._date && o._revenue > 0);
@@ -1821,7 +1821,7 @@
       <div class="tx-item">
         <div class="tx-avatar ${cls}">${icon}</div>
         <div class="tx-body">
-          <div class="tx-name">${name}</div>
+          <div class="tx-name">${name} (x${o._qty})</div>
           <div class="tx-date">${dateStr} · ${dn}</div>
         </div>
         <div class="tx-right">
