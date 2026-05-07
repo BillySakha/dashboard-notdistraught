@@ -948,7 +948,7 @@
       const SOURCES = {
         orders: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1345114316&single=true&output=csv',
         stock: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=86051744&single=true&output=csv',
-        products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
+        products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
       };
       const PLATFORM_FEE = 0.15;
       const LOW_STOCK_THRESHOLD = 10;
@@ -1035,50 +1035,26 @@
         document.getElementById('errorBanner').classList.remove('visible');
 
         try {
-          const proxy = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-          const [oRes, sRes, pRes] = await Promise.all([fetch(proxy(SOURCES.orders)), fetch(proxy(SOURCES.stock)), fetch(proxy(SOURCES.products))]);
+          // Ambil data langsung dari Google tanpa perantara allorigins
+          const [oRes, sRes, pRes] = await Promise.all([fetch(SOURCES.orders), fetch(SOURCES.stock), fetch(SOURCES.products)]);
+
+          // Validasi jika ada link yang tidak bisa diakses (404/500)
+          if (!oRes.ok || !sRes.ok || !pRes.ok) throw new Error('Salah satu link Google Sheet tidak dapat diakses.');
+
           const [oText, sText, pText] = await Promise.all([oRes.text(), sRes.text(), pRes.text()]);
 
           state.raw.orders = parseCSV(oText);
           state.raw.stock = parseCSV(sText);
           state.raw.products = parseCSV(pText);
 
-          // HPP map
-          state.hppMap = {};
-          state.raw.products.forEach((p) => {
-            const name = (p.product_name || p.nama_produk || p.name || p.produk || '').toLowerCase();
-            const hpp = num(p.hpp || p.cost || p.cogs || p.harga_pokok || 0);
-            if (name) state.hppMap[name] = hpp;
-          });
+          // Proses data (Mapping HPP, dll tetap sama)
+          processData();
 
-          // Enrich orders
-          state.raw.orders = state.raw.orders
-            .map((o) => {
-              const date = parseDate(o.date || o.tanggal || o.order_date || o.tgl);
-              const revenue = num(o.revenue || o.total || o.harga_jual || o.amount || o.sales || 0);
-              const qty = num(o.qty || o.quantity || o.jumlah || 1);
-              const platform = (o.platform || o.source || o.channel || '').toLowerCase();
-              const prodKey = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
-              let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
-              if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
-              const platformFee = revenue * PLATFORM_FEE;
-              const netProfit = revenue - hpp - platformFee;
-              return { ...o, _date: date, _revenue: revenue, _hpp: hpp, _qty: qty, _platform: platform, _platformFee: platformFee, _netProfit: netProfit };
-            })
-            .filter((o) => o._date && o._revenue > 0);
-
-          // Detect available years & auto-select latest
-          state.availableYears = [...new Set(state.raw.orders.map((o) => o._date.getFullYear()))].sort((a, b) => a - b);
-          const latestYear = state.availableYears[state.availableYears.length - 1] || new Date().getFullYear();
-          state.selectedYear = latestYear;
-          state.selectedMonth = null;
-
-          buildPeriodUI();
           setSyncState('ok');
           render();
         } catch (e) {
           setSyncState('error');
-          showError('Gagal memuat data. Periksa koneksi internet Anda. ' + e.message);
+          showError('Gagal sinkronisasi: ' + e.message);
           console.error(e);
         }
       }
