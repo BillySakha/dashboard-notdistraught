@@ -2,493 +2,758 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
-    <title>notdistraught — Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Analytics Pro v3.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <style>
       :root {
-        --green: #1d9e75;
-        --green2: #5dcaa5;
-        --green-bg: rgba(29, 158, 117, 0.12);
-        --green-bd: rgba(29, 158, 117, 0.25);
-        --blue: #378add;
-        --blue-bg: rgba(55, 138, 221, 0.12);
-        --blue-bd: rgba(55, 138, 221, 0.25);
-        --red: #e24b4a;
-        --red2: #f09595;
-        --red-bg: rgba(226, 75, 74, 0.12);
-        --red-bd: rgba(226, 75, 74, 0.25);
-        --amber: #fac775;
-        --amber-bg: rgba(250, 199, 117, 0.12);
-        --amber-bd: rgba(250, 199, 117, 0.25);
-        --orange-bg: rgba(216, 90, 48, 0.12);
-        --orange-bd: rgba(216, 90, 48, 0.25);
-        --bg: #080808;
-        --bg2: #111;
-        --bg3: #181818;
-        --bg4: #202020;
-        --border: rgba(255, 255, 255, 0.07);
-        --border2: rgba(255, 255, 255, 0.12);
-        --text: #f2f2f2;
-        --text2: #888;
-        --text3: #444;
-        --r: 14px;
-        --r-sm: 10px;
+        --bg: #f6f7fa;
+        --surface: #ffffff;
+        --surface-2: #f0f1f5;
+        --border: #e4e6ed;
+        --text-primary: #0d0f1a;
+        --text-secondary: #6b6f80;
+        --text-muted: #a0a4b4;
+        --accent: #1a1aff;
+        --accent-soft: #eeeeff;
+        --green: #00c48c;
+        --green-soft: #e6faf4;
+        --red: #ff4d6d;
+        --red-soft: #fff0f3;
+        --amber: #ffb020;
+        --amber-soft: #fff8ec;
+        --tiktok: #ff0050;
+        --shopee: #ff5722;
+        --shadow-sm: 0 1px 3px rgba(13, 15, 26, 0.06), 0 1px 2px rgba(13, 15, 26, 0.04);
+        --shadow-md: 0 4px 12px rgba(13, 15, 26, 0.08), 0 2px 4px rgba(13, 15, 26, 0.04);
+        --radius: 16px;
+        --radius-sm: 10px;
       }
-      *,
-      *::before,
-      *::after {
+      * {
         box-sizing: border-box;
         margin: 0;
         padding: 0;
       }
-      html {
-        font-size: 16px;
-        -webkit-text-size-adjust: 100%;
-      }
       body {
-        background: var(--bg);
-        color: var(--text);
         font-family: 'DM Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
         min-height: 100vh;
-        max-width: 480px;
-        margin: 0 auto;
-        padding: 0 0 40px;
+        overflow-x: hidden;
       }
 
-      .header {
-        padding: 18px 16px 14px;
+      /* ── HEADER ── */
+      .app-header {
+        background: var(--surface);
         border-bottom: 1px solid var(--border);
+        padding: 14px 20px;
         position: sticky;
         top: 0;
-        background: var(--bg);
-        z-index: 10;
-      }
-      .header-top {
+        z-index: 100;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 14px;
+        gap: 12px;
       }
-      .brand-wrap {
+      .header-brand {
         display: flex;
         align-items: center;
         gap: 10px;
       }
-      .brand-logo {
-        width: 38px;
-        height: 38px;
-        border-radius: var(--r-sm);
-        background: linear-gradient(135deg, var(--green), #085041);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'Syne', sans-serif;
-        font-size: 12px;
-        font-weight: 700;
-        color: #fff;
-        letter-spacing: 1px;
+      .brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-soft);
         flex-shrink: 0;
       }
       .brand-name {
-        font-family: 'Syne', sans-serif;
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        color: var(--text);
-      }
-      .brand-sub {
-        font-size: 10px;
-        color: var(--text3);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 22px;
         letter-spacing: 1px;
-        text-transform: uppercase;
-        margin-top: 1px;
+        color: var(--text-primary);
+      }
+      .brand-version {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-top: -2px;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .header-sync {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      .sync-indicator {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .sync-indicator.loading {
+        background: var(--amber);
+        animation: pulse 1s infinite;
+      }
+      .sync-indicator.error {
+        background: var(--red);
       }
       .refresh-btn {
-        width: 36px;
-        height: 36px;
-        border: 1px solid var(--border2);
-        border-radius: var(--r-sm);
-        background: var(--bg3);
-        color: var(--text2);
-        font-size: 16px;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-shrink: 0;
-      }
-      .period-group {
-        display: flex;
-        background: var(--bg3);
-        border-radius: var(--r-sm);
-        padding: 3px;
-        border: 1px solid var(--border);
-      }
-      .period-btn {
-        flex: 1;
-        padding: 8px 0;
-        border: none;
-        border-radius: 8px;
-        background: transparent;
-        color: var(--text3);
-        font-family: 'DM Sans', sans-serif;
         font-size: 13px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s;
+        transition: all 0.15s;
+        color: var(--text-secondary);
       }
-      .period-btn.active {
-        background: var(--green);
-        color: #fff;
+      .refresh-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
       }
 
-      .content {
-        padding: 14px 16px;
+      /* ── PERIOD SELECTOR ── */
+      .period-header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 10px 16px 0;
+      }
+      .period-year-row {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
       }
-
-      .metrics-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-      .mc {
-        border-radius: var(--r);
-        padding: 14px 14px 12px;
-        border: 1px solid transparent;
-        position: relative;
-        overflow: hidden;
-      }
-      .mc-order {
-        background: #0c2a1c;
-        border-color: var(--green-bd);
-      }
-      .mc-income {
-        background: #0c1e30;
-        border-color: var(--blue-bd);
-      }
-      .mc-cut {
-        background: #2a0c0c;
-        border-color: var(--red-bd);
-      }
-      .mc-profit {
-        background: #102208;
-        border-color: var(--green-bd);
-      }
-      .mc-icon {
-        font-size: 18px;
-        margin-bottom: 8px;
-        display: block;
-      }
-      .mc-label {
-        font-size: 10px;
-        color: var(--text2);
+      .period-label {
+        font-size: 11px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 4px;
-        line-height: 1.3;
+        letter-spacing: 0.6px;
+        color: var(--text-muted);
       }
-      .mc-value {
-        font-family: 'Syne', sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--text);
-        line-height: 1.1;
-        margin-bottom: 5px;
+      .year-switcher {
+        display: flex;
+        align-items: center;
+        gap: 6px;
       }
-      .mc-change {
-        font-size: 10px;
-        font-weight: 500;
+      .year-arrow {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        border: 1.5px solid var(--border);
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--text-secondary);
+        transition: all 0.15s;
       }
-      .chg-up {
-        color: var(--green2);
+      .year-arrow:hover {
+        border-color: var(--accent);
+        color: var(--accent);
       }
-      .chg-down {
-        color: var(--red2);
+      .year-arrow:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
       }
-      .chg-neutral {
-        color: var(--text3);
+      .year-display {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 18px;
+        letter-spacing: 0.5px;
+        color: var(--text-primary);
+        min-width: 46px;
+        text-align: center;
       }
-
-      .pills {
+      .month-chips-row {
         display: flex;
         gap: 6px;
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        padding-bottom: 2px;
+        padding-bottom: 10px;
       }
-      .pills::-webkit-scrollbar {
+      .month-chips-row::-webkit-scrollbar {
         display: none;
       }
-      .pill {
-        padding: 5px 11px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 500;
-        white-space: nowrap;
+      .m-chip {
         flex-shrink: 0;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
       }
-      .pill-green {
-        background: var(--green-bg);
-        color: var(--green2);
-        border: 1px solid var(--green-bd);
+      .m-chip:hover {
+        border-color: var(--accent);
+        color: var(--accent);
       }
-      .pill-red {
-        background: var(--red-bg);
-        color: var(--red2);
-        border: 1px solid var(--red-bd);
+      .m-chip.active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        font-weight: 600;
       }
-      .pill-blue {
-        background: var(--blue-bg);
-        color: var(--blue);
-        border: 1px solid var(--blue-bd);
+      .m-chip.has-data {
+        border-color: #c8c8ff;
       }
-      .pill-amber {
-        background: var(--amber-bg);
-        color: var(--amber);
-        border: 1px solid var(--amber-bd);
+      .m-chip.no-data {
+        opacity: 0.45;
+        cursor: default;
+      }
+      .m-chip.no-data:hover {
+        border-color: var(--border);
+        color: var(--text-secondary);
       }
 
-      .card {
-        background: var(--bg2);
-        border: 1px solid var(--border);
-        border-radius: var(--r);
-        padding: 16px;
+      /* ── ACTIVE PERIOD BANNER ── */
+      .active-period-bar {
+        background: var(--accent-soft);
+        border-bottom: 1px solid #d4d4ff;
+        padding: 7px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
-      .card-title {
-        font-size: 10px;
+      .period-desc {
+        font-size: 12px;
         font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--text3);
+        color: var(--accent);
+      }
+      .period-clear {
+        font-size: 11px;
+        color: var(--accent);
+        font-weight: 500;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 0;
+        text-decoration: underline;
+      }
+
+      /* ── MAIN ── */
+      .main {
+        padding: 14px 14px 80px;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      /* ── ERROR BANNER ── */
+      .error-banner {
+        background: var(--red-soft);
+        border: 1px solid #ffbdca;
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        font-size: 13px;
+        color: var(--red);
+        font-weight: 500;
         margin-bottom: 14px;
+        display: none;
+      }
+      .error-banner.visible {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* ── KPI CARDS ── */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .kpi-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+      .kpi-card.revenue::before {
+        background: var(--accent);
+      }
+      .kpi-card.profit::before {
+        background: var(--green);
+      }
+      .kpi-card.orders::before {
+        background: var(--amber);
+      }
+      .kpi-card.margin::before {
+        background: #9b59b6;
+      }
+      .kpi-card.wide {
+        grid-column: span 2;
+      }
+      .kpi-label {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+      }
+      .kpi-value {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 28px;
+        letter-spacing: 0.5px;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .kpi-value.sm {
+        font-size: 24px;
+      }
+      .kpi-sub {
+        font-size: 11px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+        font-weight: 400;
+      }
+
+      /* MoM indicator — prominent */
+      .mom-indicator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 8px;
+        padding: 6px 9px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .mom-indicator.up {
+        background: var(--green-soft);
+        color: #00996e;
+        border: 1px solid #b3f0dc;
+      }
+      .mom-indicator.down {
+        background: var(--red-soft);
+        color: #cc2244;
+        border: 1px solid #ffbdca;
+      }
+      .mom-indicator.neutral {
+        background: var(--surface-2);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+      }
+      .mom-arrow {
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .mom-text {
+        line-height: 1.3;
+      }
+      .mom-pct {
+        font-size: 13px;
+        font-weight: 700;
+        display: block;
+      }
+      .mom-desc {
+        font-size: 10px;
+        font-weight: 500;
+        opacity: 0.8;
+        display: block;
+        margin-top: 1px;
+      }
+
+      /* ── SECTION TITLE ── */
+      .section-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin: 18px 0 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .section-title span {
+        font-size: 11px;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text-muted);
+      }
+
+      /* ── CHART CARD ── */
+      .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 14px;
+      }
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 14px;
+      }
+      .chart-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .chart-subtitle {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .chart-legend {
+        display: flex;
+        gap: 10px;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
       }
       .chart-wrap {
         position: relative;
-        width: 100%;
-        height: 180px;
+        height: 160px;
       }
 
-      .produk-row {
+      /* ── PLATFORM BARS ── */
+      .platform-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 14px;
+      }
+      .platform-row {
+        margin-bottom: 14px;
+      }
+      .platform-row:last-child {
+        margin-bottom: 0;
+      }
+      .platform-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+      .platform-name {
         display: flex;
         align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--border);
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
       }
-      .produk-row:last-child {
-        border-bottom: none;
-      }
-      .rank {
+      .platform-icon {
         width: 24px;
         height: 24px;
-        border-radius: 50%;
-        font-size: 11px;
-        font-weight: 700;
+        border-radius: 6px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: 10px;
-        flex-shrink: 0;
-      }
-      .rank-1 {
-        background: rgba(250, 199, 117, 0.18);
-        color: var(--amber);
-        border: 1px solid var(--amber-bd);
-      }
-      .rank-2 {
-        background: rgba(180, 178, 169, 0.15);
-        color: #b4b2a9;
-        border: 1px solid rgba(180, 178, 169, 0.2);
-      }
-      .rank-3 {
-        background: rgba(240, 153, 123, 0.15);
-        color: #f0997b;
-        border: 1px solid rgba(240, 153, 123, 0.2);
-      }
-      .rank-n {
-        background: var(--bg3);
-        color: var(--text3);
-        border: 1px solid var(--border);
-      }
-      .produk-info {
-        flex: 1;
-        min-width: 0;
-      }
-      .produk-name {
-        font-size: 13px;
-        color: var(--text);
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .produk-sub {
         font-size: 11px;
-        color: var(--text3);
-        margin-top: 1px;
+        font-weight: 800;
+        color: #fff;
       }
-      .produk-val {
-        font-family: 'Syne', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--green2);
-        flex-shrink: 0;
-        margin-left: 8px;
+      .platform-icon.tiktok {
+        background: #010101;
       }
-
-      .platform-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--border);
+      .platform-icon.shopee {
+        background: var(--shopee);
       }
-      .platform-row:last-child {
-        border-bottom: none;
-      }
-      .platform-label {
-        font-size: 12px;
-        color: var(--text2);
-        min-width: 58px;
-        font-weight: 500;
-      }
-      .platform-bar-bg {
-        flex: 1;
-        height: 8px;
-        background: var(--bg3);
-        border-radius: 4px;
-        overflow: hidden;
-      }
-      .platform-bar-fill {
-        height: 100%;
-        border-radius: 4px;
+      .platform-icon.other {
+        background: var(--accent);
       }
       .platform-pct {
-        font-family: 'Syne', sans-serif;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text);
-        min-width: 34px;
-        text-align: right;
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 18px;
+        color: var(--text-primary);
+      }
+      .progress-track {
+        height: 6px;
+        background: var(--surface-2);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0;
+      }
+      .progress-fill.tiktok {
+        background: linear-gradient(90deg, #010101, #555);
+      }
+      .progress-fill.shopee {
+        background: linear-gradient(90deg, #ff5722, #ff8a65);
+      }
+      .progress-fill.other {
+        background: linear-gradient(90deg, #1a1aff, #6666ff);
+      }
+      .platform-meta {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 4px;
       }
 
-      .qs-row {
+      /* ── STOCK SECTION ── */
+      .stock-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .stock-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px;
+        box-shadow: var(--shadow-sm);
+        position: relative;
+      }
+      .stock-item.low {
+        border-color: #ffbdca;
+        background: #fffbfc;
+      }
+      .stock-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .stock-badge.low {
+        background: var(--red-soft);
+        color: var(--red);
+      }
+      .stock-badge.ok {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .stock-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+        line-height: 1.3;
+        padding-right: 36px;
+      }
+      .stock-qty {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 24px;
+        color: var(--text-primary);
+      }
+      .stock-unit {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+      .stock-bar {
+        height: 3px;
+        background: var(--surface-2);
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .stock-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+      .stock-bar-fill.low {
+        background: var(--red);
+      }
+      .stock-bar-fill.ok {
+        background: var(--green);
+      }
+
+      /* ── TRANSACTION LIST ── */
+      .table-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .table-search {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--border);
+        gap: 8px;
       }
-      .qs-row:last-child {
-        border-bottom: none;
+      .search-icon {
+        color: var(--text-muted);
+        font-size: 14px;
+        flex-shrink: 0;
       }
-      .qs-label {
-        font-size: 12px;
-        color: var(--text2);
-      }
-      .qs-val {
-        font-family: 'Syne', sans-serif;
+      .search-input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: 'DM Sans', sans-serif;
         font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
+        color: var(--text-primary);
+        width: 100%;
       }
-
-      .history-item {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        padding: 12px 0;
+      .search-input::placeholder {
+        color: var(--text-muted);
+      }
+      .tx-list {
+        max-height: 340px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .tx-item {
+        padding: 11px 16px;
         border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        transition: background 0.1s;
       }
-      .history-item:last-child {
+      .tx-item:last-child {
         border-bottom: none;
       }
-      .history-left {
+      .tx-item:hover {
+        background: var(--surface-2);
+      }
+      .tx-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+        color: #fff;
+      }
+      .tx-avatar.tiktok {
+        background: #010101;
+      }
+      .tx-avatar.shopee {
+        background: var(--shopee);
+      }
+      .tx-avatar.other {
+        background: var(--accent);
+      }
+      .tx-body {
         flex: 1;
         min-width: 0;
       }
-      .history-name {
+      .tx-name {
         font-size: 13px;
-        color: var(--text);
         font-weight: 500;
+        color: var(--text-primary);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
-      .history-sub {
+      .tx-date {
         font-size: 11px;
-        color: var(--text3);
-        margin-top: 2px;
+        color: var(--text-muted);
+        margin-top: 1px;
       }
-      .badge {
-        font-size: 10px;
-        padding: 2px 8px;
-        border-radius: 20px;
-        display: inline-block;
-        margin-top: 4px;
-        font-weight: 500;
-      }
-      .badge-tiktok {
-        background: var(--blue-bg);
-        color: var(--blue);
-        border: 1px solid var(--blue-bd);
-      }
-      .badge-shopee {
-        background: var(--orange-bg);
-        color: #f0997b;
-        border: 1px solid var(--orange-bd);
-      }
-      .history-right {
+      .tx-right {
         text-align: right;
         flex-shrink: 0;
-        margin-left: 12px;
-        padding-top: 2px;
       }
-      .h-untung {
-        font-family: 'Syne', sans-serif;
+      .tx-amount {
+        font-family: 'Bebas Neue', sans-serif;
         font-size: 14px;
-        font-weight: 700;
-        color: var(--green2);
+        letter-spacing: 0.3px;
+        color: var(--text-primary);
       }
-      .h-rugi {
-        font-family: 'Syne', sans-serif;
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--red2);
-      }
-      .h-total {
-        font-size: 11px;
-        color: var(--text3);
+      .tx-profit {
+        font-size: 10px;
         margin-top: 2px;
+        font-weight: 600;
+      }
+      .tx-profit.pos {
+        color: var(--green);
+      }
+      .tx-profit.neg {
+        color: var(--red);
+      }
+      .tx-empty {
+        padding: 32px 16px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 13px;
       }
 
-      .empty-msg {
-        color: var(--text3);
-        font-size: 13px;
-        padding: 20px 0;
-        text-align: center;
-      }
-      .loading-wrap {
+      /* ── LOADING ── */
+      .loading-state {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 60vh;
-        gap: 14px;
+        padding: 56px 24px;
+        gap: 16px;
       }
-      .loader {
+      .spinner {
         width: 32px;
         height: 32px;
-        border: 2px solid var(--border2);
-        border-top-color: var(--green);
+        border: 2.5px solid var(--border);
+        border-top-color: var(--accent);
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+        animation: spin 0.7s linear infinite;
       }
       @keyframes spin {
         to {
@@ -497,347 +762,788 @@
       }
       .loading-text {
         font-size: 13px;
-        color: var(--text3);
+        color: var(--text-muted);
+        font-weight: 500;
       }
-      .last-updated {
-        font-size: 10px;
-        color: var(--text3);
+
+      /* ── FOOTER ── */
+      .footer {
+        padding: 16px;
         text-align: center;
-        padding-top: 4px;
-        letter-spacing: 0.3px;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      /* ── ANIMATIONS ── */
+      .fade-in {
+        animation: fadeIn 0.3s ease both;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .card-enter {
+        animation: cardEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+      }
+      @keyframes cardEnter {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .kpi-card:nth-child(1) {
+        animation-delay: 0.04s;
+      }
+      .kpi-card:nth-child(2) {
+        animation-delay: 0.09s;
+      }
+      .kpi-card:nth-child(3) {
+        animation-delay: 0.14s;
+      }
+      .kpi-card:nth-child(4) {
+        animation-delay: 0.19s;
+      }
+
+      /* ── TABS ── */
+      .tab-bar {
+        display: flex;
+        gap: 4px;
+        background: var(--surface-2);
+        border-radius: 10px;
+        padding: 4px;
+        margin-bottom: 14px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 8px;
+        border-radius: 7px;
+        border: none;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .tab-btn.active {
+        background: var(--surface);
+        color: var(--text-primary);
+        box-shadow: var(--shadow-sm);
       }
     </style>
   </head>
   <body>
-    <div class="header">
-      <div class="header-top">
-        <div class="brand-wrap">
-          <div class="brand-logo">ND</div>
-          <div>
-            <div class="brand-name">notdistraught</div>
-            <div class="brand-sub">Sales Dashboard</div>
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-dot" id="syncDot"></div>
+        <div>
+          <div class="brand-name">Analytics Pro</div>
+          <div class="brand-version">DASHBOARD v3.0</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-sync">
+          <div class="sync-indicator loading" id="syncIndicator"></div>
+          <span id="syncLabel">Sinkronisasi…</span>
+        </div>
+        <button class="refresh-btn" onclick="fetchAll()" title="Muat ulang data">↻</button>
+      </div>
+    </header>
+
+    <!-- PERIOD SELECTOR -->
+    <div class="period-header">
+      <div class="period-year-row">
+        <div class="period-label">Pilih Periode</div>
+        <div class="year-switcher">
+          <button class="year-arrow" id="prevYearBtn" onclick="shiftYear(-1)">‹</button>
+          <div class="year-display" id="yearDisplay">—</div>
+          <button class="year-arrow" id="nextYearBtn" onclick="shiftYear(1)">›</button>
+        </div>
+      </div>
+      <div class="month-chips-row" id="monthChipsRow"></div>
+    </div>
+    <!-- Active period banner -->
+    <div class="active-period-bar" id="activePeriodBar" style="display: none">
+      <span class="period-desc" id="activePeriodDesc"></span>
+      <button class="period-clear" onclick="clearMonthFilter()">Lihat Semua Bulan</button>
+    </div>
+
+    <!-- MAIN -->
+    <main class="main">
+      <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <div class="loading-text">Mengambil data dari 3 sumber…</div>
+      </div>
+      <div class="error-banner" id="errorBanner"><span>⚠</span><span id="errorMsg"></span></div>
+      <div id="dashContent" style="display: none">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchTab('overview')">Ringkasan</button>
+          <button class="tab-btn" onclick="switchTab('stock')">Inventaris</button>
+          <button class="tab-btn" onclick="switchTab('orders')">Pesanan</button>
+        </div>
+
+        <!-- RINGKASAN -->
+        <div id="tabOverview">
+          <div class="kpi-grid" id="kpiGrid"></div>
+          <div class="chart-card card-enter">
+            <div class="chart-header">
+              <div>
+                <div class="chart-title">Pendapatan vs Keuntungan Bersih</div>
+                <div class="chart-subtitle" id="chartSubtitle">Tren Bulanan</div>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot" style="background: var(--accent)"></div>
+                  Pendapatan
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot" style="background: var(--green)"></div>
+                  Keuntungan
+                </div>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+          </div>
+          <div class="section-title">Distribusi Platform <span id="platformPeriod"></span></div>
+          <div class="platform-card card-enter" id="platformCard"></div>
+        </div>
+
+        <!-- INVENTARIS -->
+        <div id="tabStock" style="display: none">
+          <div id="stockSummaryCards" class="kpi-grid" style="margin-bottom: 14px"></div>
+          <div class="section-title">Level Stok <span id="lowStockCount"></span></div>
+          <div class="stock-grid" id="stockGrid"></div>
+        </div>
+
+        <!-- PESANAN -->
+        <div id="tabOrders" style="display: none">
+          <div class="table-card card-enter">
+            <div class="table-search">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="search-input" id="txSearch" placeholder="Cari pesanan…" oninput="filterTransactions()" />
+            </div>
+            <div class="tx-list" id="txList"></div>
           </div>
         </div>
-        <button class="refresh-btn" onclick="loadData()">↻</button>
       </div>
-      <div class="period-group">
-        <button class="period-btn active" onclick="setPeriod('hari', this)">Hari ini</button>
-        <button class="period-btn" onclick="setPeriod('minggu', this)">Minggu ini</button>
-        <button class="period-btn" onclick="setPeriod('bulan', this)">Bulan ini</button>
-      </div>
-    </div>
-
-    <div id="loading-screen" class="loading-wrap">
-      <div class="loader"></div>
-      <div class="loading-text">Memuat data penjualan...</div>
-    </div>
-
-    <div id="dashboard" style="display: none">
-      <div class="content">
-        <div class="metrics-grid" id="metrics-grid"></div>
-        <div class="pills" id="pills-bar"></div>
-        <div class="card">
-          <div class="card-title">Tren Keuntungan Bersih</div>
-          <div class="chart-wrap"><canvas id="trendChart" role="img" aria-label="Grafik tren keuntungan bersih">Grafik tren keuntungan.</canvas></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Produk Terlaris</div>
-          <div id="produk-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Platform</div>
-          <div id="platform-list"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Ringkasan Cepat</div>
-          <div id="quick-summary"></div>
-        </div>
-        <div class="card">
-          <div class="card-title">Riwayat Order Terbaru</div>
-          <div id="history-list"></div>
-        </div>
-        <div class="last-updated" id="last-updated"></div>
-      </div>
-    </div>
+    </main>
+    <div class="footer">Analytics Pro v3.0 · Data diperbarui setiap kali halaman dimuat</div>
 
     <script>
-      const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1345114316&single=true&output=csv';
-      let allOrders = [],
-        currentPeriod = 'hari',
-        trendChart = null;
+      // ════════════════════════════════════════════════
+      // CONSTANTS
+      // ════════════════════════════════════════════════
+      const SOURCES = {
+        orders: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1345114316&single=true&output=csv',
+        stock: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=86051744&single=true&output=csv',
+        products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
+      };
+      const PLATFORM_FEE = 0.15;
+      const LOW_STOCK_THRESHOLD = 10;
+      const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+      const MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
-      // Helper parse angka — strip Rp, titik, koma
-      function parseNum(val) {
-        return (
-          parseFloat(
-            (val || '')
-              .toString()
-              .replace(/[Rp.\s]/g, '')
-              .replace(/,/g, ''),
-          ) || 0
-        );
-      }
+      let state = {
+        raw: { orders: [], stock: [], products: [] },
+        filtered: [],
+        availableYears: [],
+        selectedYear: new Date().getFullYear(),
+        selectedMonth: null, // null = all months of selected year
+        trendChart: null,
+        txData: [],
+        hppMap: {},
+      };
 
+      // ════════════════════════════════════════════════
+      // PARSERS
+      // ════════════════════════════════════════════════
       function parseCSV(text) {
         const lines = text.trim().split('\n');
-        const headers = lines[0].split(',').map((h) => h.trim().replace(/"/g, ''));
+        if (lines.length < 2) return [];
+        const headers = lines[0].split(',').map((h) => h.trim().replace(/^"|"$/g, '').toLowerCase().replace(/\s+/g, '_'));
         return lines
           .slice(1)
           .map((line) => {
-            const vals = [];
+            const cols = [];
             let cur = '',
               inQ = false;
             for (let c of line) {
-              if (c === '"') inQ = !inQ;
-              else if (c === ',' && !inQ) {
-                vals.push(cur);
+              if (c === '"') {
+                inQ = !inQ;
+                continue;
+              }
+              if (c === ',' && !inQ) {
+                cols.push(cur.trim());
                 cur = '';
               } else cur += c;
             }
-            vals.push(cur);
+            cols.push(cur.trim());
             const obj = {};
-            headers.forEach((h, i) => (obj[h] = (vals[i] || '').replace(/"/g, '').trim()));
+            headers.forEach((h, i) => (obj[h] = (cols[i] || '').replace(/^"|"$/g, '').trim()));
             return obj;
           })
-          .filter((o) => o['Tanggal']);
+          .filter((r) => Object.values(r).some((v) => v));
       }
 
       function parseDate(str) {
         if (!str) return null;
-        const p = str.split(' ')[0];
-        let d, m, y;
-        if (p.includes('/')) [d, m, y] = p.split('/');
-        else [y, m, d] = p.split('-');
-        return new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+        str = str.trim();
+        const dmy = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        if (dmy) return new Date(+dmy[3], +dmy[2] - 1, +dmy[1]);
+        const ymd = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+        if (ymd) return new Date(+ymd[1], +ymd[2] - 1, +ymd[3]);
+        const d = new Date(str);
+        return isNaN(d) ? null : d;
       }
 
-      function filterByPeriod(orders, period, offset = 0) {
-        const now = new Date();
-        return orders.filter((o) => {
-          const d = parseDate(o['Tanggal']);
-          if (!d) return false;
-          if (period === 'hari') {
-            const t = new Date(now);
-            t.setDate(now.getDate() - offset);
-            return d.toDateString() === t.toDateString();
+      function num(v) {
+        if (v === undefined || v === null || v === '') return 0;
+        return parseFloat(String(v).replace(/[^0-9.\-]/g, '')) || 0;
+      }
+
+      // ════════════════════════════════════════════════
+      // FORMATTERS
+      // ════════════════════════════════════════════════
+      function fmtIDR(n) {
+        const abs = Math.abs(n);
+        const sign = n < 0 ? '-' : '';
+        if (abs >= 1e9) return sign + 'Rp ' + (abs / 1e9).toFixed(1) + 'M';
+        if (abs >= 1e6) return sign + 'Rp ' + (abs / 1e6).toFixed(1) + 'jt';
+        if (abs >= 1e3) return sign + 'Rp ' + (abs / 1e3).toFixed(0) + 'rb';
+        return sign + 'Rp ' + abs.toFixed(0);
+      }
+
+      // ════════════════════════════════════════════════
+      // FETCH
+      // ════════════════════════════════════════════════
+      async function fetchAll() {
+        setSyncState('loading');
+        document.getElementById('loadingState').style.display = 'flex';
+        document.getElementById('dashContent').style.display = 'none';
+        document.getElementById('errorBanner').classList.remove('visible');
+
+        try {
+          const proxy = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+          const [oRes, sRes, pRes] = await Promise.all([fetch(proxy(SOURCES.orders)), fetch(proxy(SOURCES.stock)), fetch(proxy(SOURCES.products))]);
+          const [oText, sText, pText] = await Promise.all([oRes.text(), sRes.text(), pRes.text()]);
+
+          state.raw.orders = parseCSV(oText);
+          state.raw.stock = parseCSV(sText);
+          state.raw.products = parseCSV(pText);
+
+          // HPP map
+          state.hppMap = {};
+          state.raw.products.forEach((p) => {
+            const name = (p.product_name || p.nama_produk || p.name || p.produk || '').toLowerCase();
+            const hpp = num(p.hpp || p.cost || p.cogs || p.harga_pokok || 0);
+            if (name) state.hppMap[name] = hpp;
+          });
+
+          // Enrich orders
+          state.raw.orders = state.raw.orders
+            .map((o) => {
+              const date = parseDate(o.date || o.tanggal || o.order_date || o.tgl);
+              const revenue = num(o.revenue || o.total || o.harga_jual || o.amount || o.sales || 0);
+              const qty = num(o.qty || o.quantity || o.jumlah || 1);
+              const platform = (o.platform || o.source || o.channel || '').toLowerCase();
+              const prodKey = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
+              let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
+              if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
+              const platformFee = revenue * PLATFORM_FEE;
+              const netProfit = revenue - hpp - platformFee;
+              return { ...o, _date: date, _revenue: revenue, _hpp: hpp, _qty: qty, _platform: platform, _platformFee: platformFee, _netProfit: netProfit };
+            })
+            .filter((o) => o._date && o._revenue > 0);
+
+          // Detect available years & auto-select latest
+          state.availableYears = [...new Set(state.raw.orders.map((o) => o._date.getFullYear()))].sort((a, b) => a - b);
+          const latestYear = state.availableYears[state.availableYears.length - 1] || new Date().getFullYear();
+          state.selectedYear = latestYear;
+          state.selectedMonth = null;
+
+          buildPeriodUI();
+          setSyncState('ok');
+          render();
+        } catch (e) {
+          setSyncState('error');
+          showError('Gagal memuat data. Periksa koneksi internet Anda. ' + e.message);
+          console.error(e);
+        }
+      }
+
+      // ════════════════════════════════════════════════
+      // PERIOD UI
+      // ════════════════════════════════════════════════
+      function buildPeriodUI() {
+        document.getElementById('yearDisplay').textContent = state.selectedYear;
+        const minYear = state.availableYears[0] || state.selectedYear;
+        const maxYear = state.availableYears[state.availableYears.length - 1] || state.selectedYear;
+        document.getElementById('prevYearBtn').disabled = state.selectedYear <= minYear;
+        document.getElementById('nextYearBtn').disabled = state.selectedYear >= maxYear;
+
+        // Which months have data for selected year
+        const monthsWithData = new Set(state.raw.orders.filter((o) => o._date.getFullYear() === state.selectedYear).map((o) => o._date.getMonth()));
+
+        const row = document.getElementById('monthChipsRow');
+        row.innerHTML = '';
+
+        // "Semua" chip
+        const allChip = document.createElement('button');
+        allChip.className = 'm-chip' + (state.selectedMonth === null ? ' active' : '');
+        allChip.textContent = 'Semua';
+        allChip.onclick = () => {
+          state.selectedMonth = null;
+          buildPeriodUI();
+          render();
+        };
+        row.appendChild(allChip);
+
+        // Month chips
+        MONTHS_SHORT.forEach((m, idx) => {
+          const chip = document.createElement('button');
+          const hasData = monthsWithData.has(idx);
+          chip.className = 'm-chip' + (state.selectedMonth === idx ? ' active' : '') + (hasData ? ' has-data' : ' no-data');
+          chip.textContent = m;
+          if (hasData) {
+            chip.onclick = () => {
+              state.selectedMonth = idx;
+              buildPeriodUI();
+              render();
+            };
           }
-          if (period === 'minggu') {
-            const s = new Date(now);
-            s.setDate(now.getDate() - 7 * (offset + 1) + 1);
-            const e = new Date(now);
-            e.setDate(now.getDate() - 7 * offset);
-            return d >= s && d <= e;
-          }
-          if (period === 'bulan') {
-            const t = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-            return d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
-          }
-          return false;
+          row.appendChild(chip);
+        });
+
+        // Active period banner
+        const banner = document.getElementById('activePeriodBar');
+        if (state.selectedMonth !== null) {
+          banner.style.display = 'flex';
+          document.getElementById('activePeriodDesc').textContent = `Menampilkan: ${MONTHS_FULL[state.selectedMonth]} ${state.selectedYear}`;
+        } else {
+          banner.style.display = 'none';
+        }
+      }
+
+      function shiftYear(delta) {
+        const idx = state.availableYears.indexOf(state.selectedYear);
+        const newIdx = idx + delta;
+        if (newIdx < 0 || newIdx >= state.availableYears.length) return;
+        state.selectedYear = state.availableYears[newIdx];
+        state.selectedMonth = null;
+        buildPeriodUI();
+        render();
+      }
+
+      function clearMonthFilter() {
+        state.selectedMonth = null;
+        buildPeriodUI();
+        render();
+      }
+
+      // ════════════════════════════════════════════════
+      // FILTER
+      // ════════════════════════════════════════════════
+      function getFiltered() {
+        return state.raw.orders.filter((o) => {
+          if (!o._date) return false;
+          if (o._date.getFullYear() !== state.selectedYear) return false;
+          if (state.selectedMonth !== null && o._date.getMonth() !== state.selectedMonth) return false;
+          return true;
         });
       }
 
-      function fmt(num) {
-        num = Math.round(num);
-        if (num >= 1000000) return 'Rp' + (num / 1000000).toFixed(1) + 'Jt';
-        if (num >= 1000) return 'Rp' + Math.round(num / 1000) + 'K';
-        return 'Rp' + num;
+      // MoM: always compare selected month vs previous month (same year, or Dec of prev year)
+      function getPrevPeriodStats() {
+        if (state.selectedMonth === null) {
+          // Year comparison: vs previous year
+          const prevYr = state.selectedYear - 1;
+          const prevOrders = state.raw.orders.filter((o) => o._date?.getFullYear() === prevYr);
+          if (!prevOrders.length) return { prevRevenue: 0, prevProfit: 0, prevMargin: null };
+          const prevRevenue = prevOrders.reduce((s, o) => s + o._revenue, 0);
+          const prevProfit = prevOrders.reduce((s, o) => s + o._netProfit, 0);
+          const prevMargin = prevRevenue > 0 ? (prevProfit / prevRevenue) * 100 : null;
+          return { prevRevenue, prevProfit, prevMargin };
+        }
+        // Month comparison
+        const prevMo = state.selectedMonth === 0 ? 11 : state.selectedMonth - 1;
+        const prevYr = state.selectedMonth === 0 ? state.selectedYear - 1 : state.selectedYear;
+        const prevOrders = state.raw.orders.filter((o) => o._date?.getFullYear() === prevYr && o._date.getMonth() === prevMo);
+        if (!prevOrders.length) return { prevRevenue: 0, prevProfit: 0, prevMargin: null };
+        const prevRevenue = prevOrders.reduce((s, o) => s + o._revenue, 0);
+        const prevProfit = prevOrders.reduce((s, o) => s + o._netProfit, 0);
+        const prevMargin = prevRevenue > 0 ? (prevProfit / prevRevenue) * 100 : null;
+        return { prevRevenue, prevProfit, prevMargin };
       }
 
-      function pctChange(curr, prev) {
-        if (prev === 0) return curr > 0 ? { txt: '+100%', dir: 1 } : { txt: '0%', dir: 0 };
-        const pct = Math.round(((curr - prev) / prev) * 100);
-        return { txt: (pct >= 0 ? '+' : '') + pct + '%', dir: pct >= 0 ? 1 : -1 };
-      }
-
-      function sum(orders, col) {
-        return orders.reduce((s, o) => s + parseNum(o[col]), 0);
-      }
-
+      // ════════════════════════════════════════════════
+      // RENDER
+      // ════════════════════════════════════════════════
       function render() {
-        const curr = filterByPeriod(allOrders, currentPeriod, 0);
-        const prev = filterByPeriod(allOrders, currentPeriod, 1);
-        const cU = sum(curr, 'Untung Bersih'),
-          pU = sum(prev, 'Untung Bersih');
-        const cP = sum(curr, 'Pendapatan Bersih'),
-          pP = sum(prev, 'Pendapatan Bersih');
-        const cPot = sum(curr, 'Potongan Platform'),
-          pPot = sum(prev, 'Potongan Platform');
-        const cHPP = sum(curr, 'HPP');
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashContent').style.display = 'block';
 
-        const metrics = [
-          { label: 'Total Order', value: curr.length, prev: prev.length, isCount: true, cls: 'mc-order', icon: '🛍️' },
-          { label: 'Pendapatan', value: cP, prev: pP, cls: 'mc-income', icon: '💰' },
-          { label: 'Potongan', value: cPot, prev: pPot, cls: 'mc-cut', icon: '✂️', invert: true },
-          { label: 'Keuntungan', value: cU, prev: pU, cls: 'mc-profit', icon: '📈' },
-        ];
+        const filtered = getFiltered();
+        state.filtered = filtered;
 
-        document.getElementById('metrics-grid').innerHTML = metrics
-          .map((m) => {
-            const chg = pctChange(m.value, m.prev);
-            const isUp = chg.dir > 0;
-            const good = m.invert ? !isUp : isUp;
-            const cls = chg.dir === 0 ? 'chg-neutral' : good ? 'chg-up' : 'chg-down';
-            const arrow = chg.dir === 0 ? '—' : isUp ? '▲' : '▼';
-            return `<div class="mc ${m.cls}">
-      <span class="mc-icon">${m.icon}</span>
-      <div class="mc-label">${m.label}</div>
-      <div class="mc-value">${m.isCount ? curr.length : fmt(m.value)}</div>
-      <div class="mc-change ${cls}">${arrow} ${chg.txt}</div>
-    </div>`;
-          })
-          .join('');
+        const totalRevenue = filtered.reduce((s, o) => s + o._revenue, 0);
+        const totalProfit = filtered.reduce((s, o) => s + o._netProfit, 0);
+        const totalOrders = filtered.length;
+        const margin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
 
-        const margin = cP > 0 ? Math.round((cU / cP) * 100) : 0;
-        const terjual = curr.reduce((s, o) => s + parseNum(o['Jumlah']), 0);
-        document.getElementById('pills-bar').innerHTML = `
-    <span class="pill pill-green">Margin ${margin}%</span>
-    <span class="pill ${cPot > 0 ? 'pill-red' : 'pill-blue'}">Potongan ${fmt(cPot)}</span>
-    <span class="pill pill-amber">HPP ${fmt(cHPP)}</span>
-    <span class="pill pill-blue">${terjual} item terjual</span>
-    <span class="pill ${cU >= pU ? 'pill-green' : 'pill-red'}">${cU >= pU ? '↑' : '↓'} vs lalu</span>
-  `;
+        const { prevRevenue, prevProfit, prevMargin } = getPrevPeriodStats();
+        const momMargin = prevMargin !== null ? margin - prevMargin : null;
+        const momRevenue = prevRevenue > 0 ? ((totalRevenue - prevRevenue) / prevRevenue) * 100 : null;
 
-        renderTrend(curr);
-        renderProduk(curr);
-        renderPlatform(curr);
-        renderQuick(curr, prev, cU, pU);
-        renderHistory(curr);
+        const prevPeriodLabel = getPrevPeriodLabel();
+
+        renderKPIs({ totalRevenue, totalProfit, totalOrders, margin, momMargin, momRevenue, prevPeriodLabel });
+        renderTrendChart();
+        renderPlatform(filtered);
+        renderStock();
+        renderTransactions(filtered);
       }
 
-      function renderTrend(curr) {
-        const byDay = {};
-        curr.forEach((o) => {
-          const d = parseDate(o['Tanggal']);
-          if (!d) return;
-          const key = d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
-          byDay[key] = (byDay[key] || 0) + parseNum(o['Untung Bersih']);
+      function getPrevPeriodLabel() {
+        if (state.selectedMonth === null) return `tahun ${state.selectedYear - 1}`;
+        const prevMo = state.selectedMonth === 0 ? 11 : state.selectedMonth - 1;
+        const prevYr = state.selectedMonth === 0 ? state.selectedYear - 1 : state.selectedYear;
+        return `${MONTHS_FULL[prevMo]} ${prevYr}`;
+      }
+
+      // ════════════════════════════════════════════════
+      // KPI CARDS
+      // ════════════════════════════════════════════════
+      function renderKPIs({ totalRevenue, totalProfit, totalOrders, margin, momMargin, momRevenue, prevPeriodLabel }) {
+        const grid = document.getElementById('kpiGrid');
+
+        function momBlock(val, prevLabel, suffix = '%', customDesc = null) {
+          if (val === null) {
+            return `<div class="mom-indicator neutral"><span class="mom-arrow">–</span><div class="mom-text"><span class="mom-pct">Tidak ada data</span><span class="mom-desc">bulan sebelumnya</span></div></div>`;
+          }
+          const cls = val >= 0 ? 'up' : 'down';
+          const arrow = val >= 0 ? '▲' : '▼';
+          const sign = val >= 0 ? '+' : '';
+          const desc = customDesc || (val >= 0 ? `Naik dari ${prevLabel}` : `Turun dari ${prevLabel}`);
+          return `<div class="mom-indicator ${cls}"><span class="mom-arrow">${arrow}</span><div class="mom-text"><span class="mom-pct">${sign}${Math.abs(val).toFixed(1)}${suffix}</span><span class="mom-desc">${desc}</span></div></div>`;
+        }
+
+        grid.innerHTML = `
+    <div class="kpi-card revenue card-enter">
+      <div class="kpi-label">Pendapatan</div>
+      <div class="kpi-value">${fmtIDR(totalRevenue)}</div>
+      ${momBlock(momRevenue, prevPeriodLabel, '%', momRevenue !== null ? (momRevenue >= 0 ? `Naik dari ${prevPeriodLabel}` : `Turun dari ${prevPeriodLabel}`) : null)}
+      <div class="kpi-sub">${totalOrders} pesanan</div>
+    </div>
+    <div class="kpi-card profit card-enter">
+      <div class="kpi-label">Keuntungan Bersih</div>
+      <div class="kpi-value">${fmtIDR(totalProfit)}</div>
+      ${momBlock(momMargin, prevPeriodLabel, '% margin')}
+      <div class="kpi-sub">Setelah HPP & biaya</div>
+    </div>
+    <div class="kpi-card margin card-enter">
+      <div class="kpi-label">Margin Bersih</div>
+      <div class="kpi-value sm">${margin.toFixed(1)}%</div>
+      ${momBlock(momMargin, prevPeriodLabel, '%', momMargin !== null ? (momMargin >= 0 ? `Margin naik dari ${prevPeriodLabel}` : `Margin turun dari ${prevPeriodLabel}`) : null)}
+      <div class="kpi-sub">Keuntungan / Pendapatan</div>
+    </div>
+    <div class="kpi-card orders card-enter">
+      <div class="kpi-label">Total Pesanan</div>
+      <div class="kpi-value sm">${totalOrders}</div>
+      <div class="kpi-sub" style="margin-top:12px">Rata-rata ${fmtIDR(totalOrders ? totalRevenue / totalOrders : 0)}/pesanan</div>
+    </div>
+  `;
+      }
+
+      // ════════════════════════════════════════════════
+      // TREND CHART
+      // ════════════════════════════════════════════════
+      function renderTrendChart() {
+        const grouped = {};
+        state.raw.orders.forEach((o) => {
+          if (!o._date) return;
+          if (o._date.getFullYear() !== state.selectedYear) return;
+          const key = String(o._date.getMonth()).padStart(2, '0');
+          if (!grouped[key]) grouped[key] = { rev: 0, profit: 0, month: o._date.getMonth() };
+          grouped[key].rev += o._revenue;
+          grouped[key].profit += o._netProfit;
         });
-        const entries = Object.entries(byDay);
-        const labels = entries.length ? entries.map((x) => x[0]) : ['(kosong)'];
-        const data = entries.length ? entries.map((x) => Math.round(x[1])) : [0];
-        const colors = data.map((v) => (v >= 0 ? '#1D9E75' : '#E24B4A'));
-        if (trendChart) trendChart.destroy();
-        trendChart = new Chart(document.getElementById('trendChart'), {
+
+        const keys = Object.keys(grouped).sort();
+        const labels = keys.map((k) => MONTHS_SHORT[grouped[k].month]);
+        const revData = keys.map((k) => grouped[k].rev);
+        const prfData = keys.map((k) => grouped[k].profit);
+
+        // Highlight selected month
+        const barColors = keys.map((k) => {
+          const isSelected = state.selectedMonth !== null && grouped[k].month === state.selectedMonth;
+          return isSelected ? 'rgba(26,26,255,0.30)' : 'rgba(26,26,255,0.10)';
+        });
+        const barBorders = keys.map((k) => {
+          const isSelected = state.selectedMonth !== null && grouped[k].month === state.selectedMonth;
+          return isSelected ? 'rgba(26,26,255,1)' : 'rgba(26,26,255,0.5)';
+        });
+
+        document.getElementById('chartSubtitle').textContent = state.selectedMonth !== null ? `${MONTHS_FULL[state.selectedMonth]} ${state.selectedYear}` : `Tren ${state.selectedYear}`;
+
+        const canvas = document.getElementById('trendChart');
+        if (state.trendChart) state.trendChart.destroy();
+
+        state.trendChart = new Chart(canvas, {
           type: 'bar',
-          data: { labels, datasets: [{ data, backgroundColor: colors, borderRadius: 6, borderSkipped: false }] },
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Pendapatan',
+                data: revData,
+                backgroundColor: barColors,
+                borderColor: barBorders,
+                borderWidth: 1.5,
+                borderRadius: 5,
+                borderSkipped: false,
+              },
+              {
+                label: 'Keuntungan Bersih',
+                data: prfData,
+                backgroundColor: 'rgba(0,196,140,0.15)',
+                borderColor: 'rgba(0,196,140,0.9)',
+                borderWidth: 2,
+                type: 'line',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: 'rgba(0,196,140,1)',
+                pointRadius: 3,
+                pointHoverRadius: 5,
+              },
+            ],
+          },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: { label: (ctx) => ` ${ctx.dataset.label}: ${fmtIDR(ctx.raw)}` },
+                backgroundColor: '#0D0F1A',
+                titleFont: { family: 'DM Sans', size: 11 },
+                bodyFont: { family: 'DM Sans', size: 12 },
+                padding: 10,
+                cornerRadius: 8,
+              },
+            },
             scales: {
-              y: { ticks: { callback: (v) => fmt(v), font: { size: 10 }, color: '#444' }, grid: { color: 'rgba(255,255,255,0.04)' }, border: { color: 'transparent' } },
-              x: { ticks: { font: { size: 10 }, color: '#444', autoSkip: false, maxRotation: 45 }, grid: { display: false }, border: { color: 'transparent' } },
+              x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 10 }, color: '#A0A4B4' } },
+              y: {
+                grid: { color: '#F0F1F5', lineWidth: 1 },
+                ticks: { font: { family: 'DM Sans', size: 10 }, color: '#A0A4B4', callback: (v) => fmtIDR(v) },
+                border: { display: false },
+              },
             },
           },
         });
       }
 
-      function renderProduk(curr) {
-        const byP = {};
-        curr.forEach((o) => {
-          const k = o['Nama Produk'] || 'Unknown';
-          if (!byP[k]) byP[k] = { untung: 0, pcs: 0 };
-          byP[k].untung += parseNum(o['Untung Bersih']);
-          byP[k].pcs += parseNum(o['Jumlah']);
+      // ════════════════════════════════════════════════
+      // PLATFORM
+      // ════════════════════════════════════════════════
+      function renderPlatform(filtered) {
+        const card = document.getElementById('platformCard');
+        const platforms = {};
+        filtered.forEach((o) => {
+          const p = o._platform || 'lainnya';
+          if (!platforms[p]) platforms[p] = { rev: 0, orders: 0 };
+          platforms[p].rev += o._revenue;
+          platforms[p].orders++;
         });
-        const sorted = Object.entries(byP)
-          .sort((a, b) => b[1].untung - a[1].untung)
-          .slice(0, 5);
-        const rankCls = ['rank-1', 'rank-2', 'rank-3', 'rank-n', 'rank-n'];
-        document.getElementById('produk-list').innerHTML = sorted.length
-          ? sorted
-              .map(
-                ([name, d], i) => `<div class="produk-row">
-        <div class="rank ${rankCls[i]}">${i + 1}</div>
-        <div class="produk-info"><div class="produk-name">${name}</div><div class="produk-sub">${Math.round(d.pcs)} pcs terjual</div></div>
-        <div class="produk-val">${fmt(d.untung)}</div>
-      </div>`,
-              )
-              .join('')
-          : '<div class="empty-msg">Belum ada data</div>';
-      }
+        const total = filtered.reduce((s, o) => s + o._revenue, 0);
+        const sorted = Object.entries(platforms).sort((a, b) => b[1].rev - a[1].rev);
 
-      function renderPlatform(curr) {
-        const byP = {};
-        curr.forEach((o) => {
-          const k = o['Platform'] || 'Lainnya';
-          byP[k] = (byP[k] || 0) + 1;
-        });
-        const total = curr.length || 1;
-        const colors = { TikTok: '#378ADD', Shopee: '#D85A30' };
-        const entries = Object.entries(byP).sort((a, b) => b[1] - a[1]);
-        document.getElementById('platform-list').innerHTML = entries.length
-          ? entries
-              .map(([p, c]) => {
-                const pct = Math.round((c / total) * 100);
-                return `<div class="platform-row">
-        <div class="platform-label">${p}</div>
-        <div class="platform-bar-bg"><div class="platform-bar-fill" style="width:${pct}%;background:${colors[p] || '#888'}"></div></div>
-        <div class="platform-pct">${pct}%</div>
+        const periodStr = state.selectedMonth !== null ? `${MONTHS_SHORT[state.selectedMonth]} ${state.selectedYear}` : `${state.selectedYear}`;
+        document.getElementById('platformPeriod').textContent = periodStr;
+
+        card.innerHTML = sorted.length
+          ? sorted
+              .map(([name, data]) => {
+                const pct = total > 0 ? (data.rev / total) * 100 : 0;
+                const cls = name === 'tiktok' ? 'tiktok' : name === 'shopee' ? 'shopee' : 'other';
+                const lbl = name === 'tiktok' ? 'TT' : name === 'shopee' ? 'Sp' : name.slice(0, 2).toUpperCase();
+                const displayName = name === 'tiktok' ? 'TikTok Shop' : name === 'shopee' ? 'Shopee' : name.charAt(0).toUpperCase() + name.slice(1);
+                return `
+      <div class="platform-row">
+        <div class="platform-top">
+          <div class="platform-name"><div class="platform-icon ${cls}">${lbl}</div>${displayName}</div>
+          <div class="platform-pct">${pct.toFixed(1)}%</div>
+        </div>
+        <div class="progress-track"><div class="progress-fill ${cls}" data-w="${pct}"></div></div>
+        <div class="platform-meta">${data.orders} pesanan · ${fmtIDR(data.rev)}</div>
       </div>`;
               })
               .join('')
-          : '<div class="empty-msg">Belum ada data</div>';
+          : '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">Tidak ada data untuk periode ini</div>';
+
+        requestAnimationFrame(() => {
+          card.querySelectorAll('.progress-fill').forEach((el) => {
+            el.style.width = el.dataset.w + '%';
+          });
+        });
       }
 
-      function renderQuick(curr, prev, cU, pU) {
-        const diff = Math.round(cU - pU);
-        const terjual = curr.reduce((s, o) => s + parseNum(o['Jumlah']), 0);
-        const avg = curr.length ? Math.round(cU / curr.length) : 0;
-        document.getElementById('quick-summary').innerHTML = `
-    <div class="qs-row"><span class="qs-label">vs periode sebelumnya</span><span class="qs-val" style="color:${diff >= 0 ? '#5DCAA5' : '#F09595'}">${diff >= 0 ? '+' : ''}${fmt(diff)}</span></div>
-    <div class="qs-row"><span class="qs-label">Total item terjual</span><span class="qs-val">${terjual} pcs</span></div>
-    <div class="qs-row"><span class="qs-label">Rata-rata per order</span><span class="qs-val">${fmt(avg)}</span></div>
-    <div class="qs-row"><span class="qs-label">Jumlah transaksi</span><span class="qs-val">${curr.length}</span></div>
-  `;
+      // ════════════════════════════════════════════════
+      // STOCK
+      // ════════════════════════════════════════════════
+      function renderStock() {
+        const stock = state.raw.stock;
+        const grid = document.getElementById('stockGrid');
+        const sumCards = document.getElementById('stockSummaryCards');
+
+        if (!stock.length) {
+          grid.innerHTML = '<div style="color:var(--text-muted);font-size:13px;grid-column:span 2;padding:16px">Data stok tidak tersedia</div>';
+          return;
+        }
+
+        const items = stock
+          .map((s) => {
+            const name = s.product_name || s.nama_produk || s.name || s.produk || s.item || Object.values(s)[0] || 'Tidak diketahui';
+            const qty = num(s.stock || s.qty || s.quantity || s.stok || s.jumlah || Object.values(s)[1] || 0);
+            const isLow = qty <= LOW_STOCK_THRESHOLD;
+            const barPct = Math.min(100, (qty / 100) * 100);
+            return { name, qty, isLow, barPct };
+          })
+          .sort((a, b) => a.qty - b.qty);
+
+        const lowCount = items.filter((i) => i.isLow).length;
+        const totalUnits = items.reduce((s, i) => s + i.qty, 0);
+        document.getElementById('lowStockCount').textContent = lowCount > 0 ? `⚠ ${lowCount} stok menipis` : `✓ Semua aman`;
+
+        sumCards.innerHTML = `
+    <div class="kpi-card wide card-enter" style="grid-column:span 2">
+      <div class="kpi-label">Total Unit Stok</div>
+      <div class="kpi-value">${totalUnits.toLocaleString('id-ID')}</div>
+      <div class="kpi-sub">${items.length} SKU · ${lowCount} stok menipis</div>
+    </div>`;
+
+        grid.innerHTML = items
+          .map(
+            (item) => `
+    <div class="stock-item ${item.isLow ? 'low' : ''}">
+      <span class="stock-badge ${item.isLow ? 'low' : 'ok'}">${item.isLow ? 'Menipis' : 'Aman'}</span>
+      <div class="stock-name">${item.name}</div>
+      <div class="stock-qty">${item.qty} <span class="stock-unit">unit</span></div>
+      <div class="stock-bar"><div class="stock-bar-fill ${item.isLow ? 'low' : 'ok'}" style="width:${item.barPct}%"></div></div>
+    </div>`,
+          )
+          .join('');
       }
 
-      function renderHistory(curr) {
-        document.getElementById('history-list').innerHTML = curr.slice(0, 10).length
-          ? curr
-              .slice(0, 10)
-              .map((o) => {
-                const u = parseNum(o['Untung Bersih']);
-                const platCls = o['Platform'] === 'TikTok' ? 'badge-tiktok' : 'badge-shopee';
-                return `<div class="history-item">
-          <div class="history-left">
-            <div class="history-name">${o['Nama Produk'] || '-'}</div>
-            <div class="history-sub">${o['Varian'] || ''} · ${o['Jumlah'] || 0} pcs</div>
-            <span class="badge ${platCls}">${o['Platform'] || ''}</span>
-          </div>
-          <div class="history-right">
-            <div class="${u >= 0 ? 'h-untung' : 'h-rugi'}">${u >= 0 ? '+' : ''}${fmt(u)}</div>
-            <div class="h-total">${fmt(parseNum(o['Pendapatan Bersih']))}</div>
-          </div>
-        </div>`;
-              })
-              .join('')
-          : '<div class="empty-msg">Belum ada order di periode ini</div>';
+      // ════════════════════════════════════════════════
+      // TRANSACTIONS
+      // ════════════════════════════════════════════════
+      function renderTransactions(filtered) {
+        state.txData = [...filtered].sort((a, b) => b._date - a._date);
+        renderTxList(state.txData);
       }
 
-      function setPeriod(p, btn) {
-        currentPeriod = p;
-        document.querySelectorAll('.period-btn').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        render();
+      function renderTxList(orders) {
+        const list = document.getElementById('txList');
+        if (!orders.length) {
+          list.innerHTML = '<div class="tx-empty">Tidak ada pesanan ditemukan</div>';
+          return;
+        }
+        list.innerHTML = orders
+          .slice(0, 100)
+          .map((o) => {
+            const platform = o._platform || 'other';
+            const cls = platform === 'tiktok' ? 'tiktok' : platform === 'shopee' ? 'shopee' : 'other';
+            const icon = platform === 'tiktok' ? 'TT' : platform === 'shopee' ? 'Sp' : '🛒';
+            const name = o.product || o.product_name || o.nama_produk || o.item || 'Pesanan';
+            const dateStr = o._date ? `${o._date.getDate()} ${MONTHS_SHORT[o._date.getMonth()]} ${o._date.getFullYear()}` : '—';
+            const pCls = o._netProfit >= 0 ? 'pos' : 'neg';
+            const displayPlatform = platform === 'tiktok' ? 'TikTok Shop' : platform === 'shopee' ? 'Shopee' : platform;
+            return `
+      <div class="tx-item">
+        <div class="tx-avatar ${cls}">${icon}</div>
+        <div class="tx-body">
+          <div class="tx-name">${name}</div>
+          <div class="tx-date">${dateStr} · ${displayPlatform}</div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount">${fmtIDR(o._revenue)}</div>
+          <div class="tx-profit ${pCls}">${o._netProfit >= 0 ? '+' : ''}${fmtIDR(o._netProfit)}</div>
+        </div>
+      </div>`;
+          })
+          .join('');
       }
 
-      async function loadData() {
-        document.getElementById('loading-screen').style.display = 'flex';
-        document.getElementById('dashboard').style.display = 'none';
-        try {
-          const res = await fetch(CSV_URL);
-          const text = await res.text();
-          allOrders = parseCSV(text);
-          document.getElementById('last-updated').textContent = 'Diperbarui: ' + new Date().toLocaleString('id-ID');
-          document.getElementById('loading-screen').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-          render();
-        } catch (e) {
-          document.getElementById('loading-screen').innerHTML = '<div class="loading-text" style="color:#F09595">Gagal memuat data.</div>';
+      function filterTransactions() {
+        const q = document.getElementById('txSearch').value.toLowerCase();
+        if (!q) {
+          renderTxList(state.txData);
+          return;
+        }
+        renderTxList(
+          state.txData.filter((o) => {
+            const name = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
+            return name.includes(q) || (o._platform || '').includes(q);
+          }),
+        );
+      }
+
+      // ════════════════════════════════════════════════
+      // UI HELPERS
+      // ════════════════════════════════════════════════
+      function setSyncState(s) {
+        const dot = document.getElementById('syncDot');
+        const ind = document.getElementById('syncIndicator');
+        const lbl = document.getElementById('syncLabel');
+        if (s === 'loading') {
+          dot.style.cssText = 'background:var(--amber);box-shadow:0 0 0 3px var(--amber-soft)';
+          ind.className = 'sync-indicator loading';
+          lbl.textContent = 'Sinkronisasi…';
+        } else if (s === 'ok') {
+          dot.style.cssText = 'background:var(--green);box-shadow:0 0 0 3px var(--green-soft)';
+          ind.className = 'sync-indicator';
+          lbl.textContent = 'Aktif';
+        } else {
+          dot.style.cssText = 'background:var(--red);box-shadow:0 0 0 3px var(--red-soft)';
+          ind.className = 'sync-indicator error';
+          lbl.textContent = 'Error';
         }
       }
-      loadData();
+
+      function showError(msg) {
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('dashContent').style.display = 'block';
+        const b = document.getElementById('errorBanner');
+        b.classList.add('visible');
+        document.getElementById('errorMsg').textContent = msg;
+      }
+
+      function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+          b.classList.toggle('active', ['overview', 'stock', 'orders'][i] === tab);
+        });
+        document.getElementById('tabOverview').style.display = tab === 'overview' ? '' : 'none';
+        document.getElementById('tabStock').style.display = tab === 'stock' ? '' : 'none';
+        document.getElementById('tabOrders').style.display = tab === 'orders' ? '' : 'none';
+      }
+
+      // ════════════════════════════════════════════════
+      // BOOT
+      // ════════════════════════════════════════════════
+      fetchAll();
     </script>
   </body>
 </html>
