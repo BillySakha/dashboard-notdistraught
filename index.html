@@ -984,7 +984,7 @@
       <div class="header-brand">
         <div class="brand-dot" id="syncDot"></div>
         <div>
-          <div class="brand-name">Analytics Pro</div>
+          <div class="brand-name">NotDistraught</div>
           <div class="brand-version">DASHBOARD</div>
         </div>
       </div>
@@ -1170,7 +1170,7 @@
       function parseDate(str) {
         if (!str) return null;
         str = str.trim();
-        const dmy = str.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        const dmy = str.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
         if (dmy) return new Date(+dmy[3], +dmy[2] - 1, +dmy[1]);
         const ymd = str.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
         if (ymd) return new Date(+ymd[1], +ymd[2] - 1, +ymd[3]);
