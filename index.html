@@ -1320,6 +1320,9 @@
         // Financial KPIs come exclusively from laporanMap
         state.raw.orders = state.raw.orders
           .map((o) => {
+            // BARIS PENTING: Definisi variabel date harus ada di sini!
+            const date = parseDate(o.tanggal || o.date || '');
+
             const revenuePerUnit = num(o.harga_jual || o.revenue || 0);
             const qty = num(o.qty || o.quantity || o.jumlah || 1);
             const totalRevenue = revenuePerUnit * qty;
@@ -1333,6 +1336,7 @@
             // Untung Bersih = (Harga - Modal - Admin 15%) * Jumlah
             const _netProfit = (revenuePerUnit - hppPerUnit - revenuePerUnit * 0.15) * qty;
 
+            // Pastiin o._date pake variabel 'date' yang baru kita bikin di atas
             return { ...o, _date: date, _revenue: totalRevenue, _qty: qty, _platform: platform, _netProfit: _netProfit };
           })
           .filter((o) => o._date && o._revenue > 0);
