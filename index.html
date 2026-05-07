@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-    <title>Analytics Pro v3.0</title>
+    <title>NotDistraught</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -24,7 +24,7 @@
         --red-soft: #fff0f3;
         --amber: #ffb020;
         --amber-soft: #fff8ec;
-        --tiktok: #ff0050;
+        --purple: #9b59b6;
         --shopee: #ff5722;
         --shadow-sm: 0 1px 3px rgba(13, 15, 26, 0.06), 0 1px 2px rgba(13, 15, 26, 0.04);
         --shadow-md: 0 4px 12px rgba(13, 15, 26, 0.08), 0 2px 4px rgba(13, 15, 26, 0.04);
@@ -95,17 +95,17 @@
         color: var(--text-secondary);
         font-weight: 500;
       }
-      .sync-indicator {
+      .sync-dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
         background: var(--green);
       }
-      .sync-indicator.loading {
+      .sync-dot.loading {
         background: var(--amber);
         animation: pulse 1s infinite;
       }
-      .sync-indicator.error {
+      .sync-dot.error {
         background: var(--red);
       }
       .refresh-btn {
@@ -118,7 +118,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 13px;
+        font-size: 14px;
         transition: all 0.15s;
         color: var(--text-secondary);
       }
@@ -136,6 +136,64 @@
         }
       }
 
+      /* ── SOURCE STATUS PILLS ── */
+      .source-bar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 8px 16px;
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .source-bar::-webkit-scrollbar {
+        display: none;
+      }
+      .source-pill {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        border: 1.5px solid var(--border);
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-muted);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .source-pill .pill-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--text-muted);
+      }
+      .source-pill.ok {
+        border-color: #b3f0dc;
+        color: #00875a;
+        background: #f0fdf8;
+      }
+      .source-pill.ok .pill-dot {
+        background: var(--green);
+      }
+      .source-pill.loading {
+        border-color: #ffe0a3;
+        color: #7a5200;
+        background: var(--amber-soft);
+      }
+      .source-pill.loading .pill-dot {
+        background: var(--amber);
+        animation: pulse 1s infinite;
+      }
+      .source-pill.error {
+        border-color: #ffbdca;
+        color: #cc2244;
+        background: var(--red-soft);
+      }
+      .source-pill.error .pill-dot {
+        background: var(--red);
+      }
+
       /* ── PERIOD SELECTOR ── */
       .period-header {
         background: var(--surface);
@@ -150,7 +208,7 @@
       }
       .period-label {
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.6px;
         color: var(--text-muted);
@@ -179,15 +237,15 @@
         color: var(--accent);
       }
       .year-arrow:disabled {
-        opacity: 0.35;
+        opacity: 0.3;
         cursor: not-allowed;
       }
       .year-display {
         font-family: 'Bebas Neue', sans-serif;
-        font-size: 18px;
+        font-size: 20px;
         letter-spacing: 0.5px;
         color: var(--text-primary);
-        min-width: 46px;
+        min-width: 50px;
         text-align: center;
       }
       .month-chips-row {
@@ -214,7 +272,7 @@
         transition: all 0.15s;
         white-space: nowrap;
       }
-      .m-chip:hover {
+      .m-chip:hover:not(.no-data) {
         border-color: var(--accent);
         color: var(--accent);
       }
@@ -224,16 +282,12 @@
         color: #fff;
         font-weight: 600;
       }
-      .m-chip.has-data {
+      .m-chip.has-laporan {
         border-color: #c8c8ff;
       }
       .m-chip.no-data {
-        opacity: 0.45;
+        opacity: 0.35;
         cursor: default;
-      }
-      .m-chip.no-data:hover {
-        border-color: var(--border);
-        color: var(--text-secondary);
       }
 
       /* ── ACTIVE PERIOD BANNER ── */
@@ -249,6 +303,15 @@
         font-size: 12px;
         font-weight: 600;
         color: var(--accent);
+      }
+      .period-source-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        background: var(--accent);
+        color: #fff;
+        letter-spacing: 0.4px;
       }
       .period-clear {
         font-size: 11px;
@@ -274,16 +337,20 @@
         border: 1px solid #ffbdca;
         border-radius: var(--radius-sm);
         padding: 12px 16px;
-        font-size: 13px;
+        font-size: 12px;
         color: var(--red);
         font-weight: 500;
         margin-bottom: 14px;
         display: none;
+        gap: 8px;
+        align-items: flex-start;
+        line-height: 1.5;
       }
       .error-banner.visible {
         display: flex;
-        align-items: center;
-        gap: 8px;
+      }
+      .error-banner strong {
+        font-weight: 700;
       }
 
       /* ── KPI CARDS ── */
@@ -317,11 +384,11 @@
       .kpi-card.profit::before {
         background: var(--green);
       }
+      .kpi-card.margin::before {
+        background: var(--purple);
+      }
       .kpi-card.orders::before {
         background: var(--amber);
-      }
-      .kpi-card.margin::before {
-        background: #9b59b6;
       }
       .kpi-card.wide {
         grid-column: span 2;
@@ -351,7 +418,29 @@
         font-weight: 400;
       }
 
-      /* MoM indicator — prominent */
+      /* ── data source tag on card ── */
+      .kpi-source-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+      }
+      .kpi-source-tag.laporan {
+        background: #eeeeff;
+        color: var(--accent);
+      }
+      .kpi-source-tag.orders {
+        background: var(--amber-soft);
+        color: #7a5200;
+      }
+
+      /* ── MoM indicator ── */
       .mom-indicator {
         display: flex;
         align-items: center;
@@ -359,13 +448,12 @@
         margin-top: 8px;
         padding: 6px 9px;
         border-radius: 8px;
-        font-size: 11px;
         font-weight: 600;
         line-height: 1.3;
       }
       .mom-indicator.up {
         background: var(--green-soft);
-        color: #00996e;
+        color: #00875a;
         border: 1px solid #b3f0dc;
       }
       .mom-indicator.down {
@@ -379,7 +467,7 @@
         border: 1px solid var(--border);
       }
       .mom-arrow {
-        font-size: 14px;
+        font-size: 13px;
         flex-shrink: 0;
       }
       .mom-text {
@@ -446,6 +534,7 @@
       .chart-legend {
         display: flex;
         gap: 10px;
+        flex-shrink: 0;
       }
       .legend-item {
         display: flex;
@@ -463,6 +552,14 @@
       .chart-wrap {
         position: relative;
         height: 160px;
+      }
+      .chart-empty {
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 13px;
       }
 
       /* ── PLATFORM BARS ── */
@@ -546,7 +643,7 @@
         margin-top: 4px;
       }
 
-      /* ── STOCK SECTION ── */
+      /* ── STOCK ── */
       .stock-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -619,7 +716,7 @@
         background: var(--green);
       }
 
-      /* ── TRANSACTION LIST ── */
+      /* ── TRANSACTIONS ── */
       .table-card {
         background: var(--surface);
         border: 1px solid var(--border);
@@ -766,54 +863,6 @@
         font-weight: 500;
       }
 
-      /* ── FOOTER ── */
-      .footer {
-        padding: 16px;
-        text-align: center;
-        font-size: 11px;
-        color: var(--text-muted);
-      }
-
-      /* ── ANIMATIONS ── */
-      .fade-in {
-        animation: fadeIn 0.3s ease both;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .card-enter {
-        animation: cardEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
-      }
-      @keyframes cardEnter {
-        from {
-          opacity: 0;
-          transform: translateY(10px) scale(0.98);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-      .kpi-card:nth-child(1) {
-        animation-delay: 0.04s;
-      }
-      .kpi-card:nth-child(2) {
-        animation-delay: 0.09s;
-      }
-      .kpi-card:nth-child(3) {
-        animation-delay: 0.14s;
-      }
-      .kpi-card:nth-child(4) {
-        animation-delay: 0.19s;
-      }
-
       /* ── TABS ── */
       .tab-bar {
         display: flex;
@@ -841,6 +890,92 @@
         color: var(--text-primary);
         box-shadow: var(--shadow-sm);
       }
+
+      /* ── LAPORAN DETAIL TABLE ── */
+      .laporan-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .laporan-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        align-items: center;
+        gap: 8px;
+      }
+      .laporan-row:last-child {
+        border-bottom: none;
+      }
+      .laporan-row.header {
+        background: var(--surface-2);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--text-muted);
+      }
+      .laporan-month {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .laporan-val {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 14px;
+        color: var(--text-primary);
+        text-align: right;
+      }
+      .laporan-margin {
+        font-size: 12px;
+        font-weight: 600;
+        text-align: right;
+      }
+      .laporan-margin.good {
+        color: var(--green);
+      }
+      .laporan-margin.bad {
+        color: var(--red);
+      }
+
+      /* ── FOOTER ── */
+      .footer {
+        padding: 16px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      /* ── ANIMATIONS ── */
+      .card-enter {
+        animation: cardEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+      }
+      @keyframes cardEnter {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .kpi-card:nth-child(1) {
+        animation-delay: 0.04s;
+      }
+      .kpi-card:nth-child(2) {
+        animation-delay: 0.09s;
+      }
+      .kpi-card:nth-child(3) {
+        animation-delay: 0.14s;
+      }
+      .kpi-card:nth-child(4) {
+        animation-delay: 0.19s;
+      }
     </style>
   </head>
   <body>
@@ -850,17 +985,37 @@
         <div class="brand-dot" id="syncDot"></div>
         <div>
           <div class="brand-name">Analytics Pro</div>
-          <div class="brand-version">DASHBOARD v3.0</div>
+          <div class="brand-version">DASHBOARD</div>
         </div>
       </div>
       <div class="header-right">
         <div class="header-sync">
-          <div class="sync-indicator loading" id="syncIndicator"></div>
+          <div class="sync-dot loading" id="syncIndicator"></div>
           <span id="syncLabel">Sinkronisasi…</span>
         </div>
         <button class="refresh-btn" onclick="fetchAll()" title="Muat ulang data">↻</button>
       </div>
     </header>
+
+    <!-- SOURCE STATUS PILLS -->
+    <div class="source-bar" id="sourceBar">
+      <div class="source-pill loading" id="pill-laporan">
+        <div class="pill-dot"></div>
+        Laporan
+      </div>
+      <div class="source-pill loading" id="pill-orders">
+        <div class="pill-dot"></div>
+        Pesanan
+      </div>
+      <div class="source-pill loading" id="pill-stock">
+        <div class="pill-dot"></div>
+        Stok
+      </div>
+      <div class="source-pill loading" id="pill-products">
+        <div class="pill-dot"></div>
+        Produk
+      </div>
+    </div>
 
     <!-- PERIOD SELECTOR -->
     <div class="period-header">
@@ -874,34 +1029,38 @@
       </div>
       <div class="month-chips-row" id="monthChipsRow"></div>
     </div>
-    <!-- Active period banner -->
     <div class="active-period-bar" id="activePeriodBar" style="display: none">
-      <span class="period-desc" id="activePeriodDesc"></span>
-      <button class="period-clear" onclick="clearMonthFilter()">Lihat Semua Bulan</button>
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span class="period-desc" id="activePeriodDesc"></span>
+        <span class="period-source-tag">LAPORAN</span>
+      </div>
+      <button class="period-clear" onclick="clearMonthFilter()">Lihat Semua</button>
     </div>
 
     <!-- MAIN -->
     <main class="main">
       <div class="loading-state" id="loadingState">
         <div class="spinner"></div>
-        <div class="loading-text">Mengambil data dari 3 sumber…</div>
+        <div class="loading-text" id="loadingText">Mengambil data dari 4 sumber…</div>
       </div>
       <div class="error-banner" id="errorBanner"><span>⚠</span><span id="errorMsg"></span></div>
+
       <div id="dashContent" style="display: none">
         <div class="tab-bar">
           <button class="tab-btn active" onclick="switchTab('overview')">Ringkasan</button>
+          <button class="tab-btn" onclick="switchTab('laporan')">Laporan</button>
           <button class="tab-btn" onclick="switchTab('stock')">Inventaris</button>
           <button class="tab-btn" onclick="switchTab('orders')">Pesanan</button>
         </div>
 
-        <!-- RINGKASAN -->
+        <!-- TAB: RINGKASAN -->
         <div id="tabOverview">
           <div class="kpi-grid" id="kpiGrid"></div>
           <div class="chart-card card-enter">
             <div class="chart-header">
               <div>
                 <div class="chart-title">Pendapatan vs Keuntungan Bersih</div>
-                <div class="chart-subtitle" id="chartSubtitle">Tren Bulanan</div>
+                <div class="chart-subtitle" id="chartSubtitle">Tren Bulanan · Sumber: Laporan</div>
               </div>
               <div class="chart-legend">
                 <div class="legend-item">
@@ -914,20 +1073,28 @@
                 </div>
               </div>
             </div>
-            <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+            <div class="chart-wrap" id="chartWrap"><canvas id="trendChart"></canvas></div>
+            <div class="chart-empty" id="chartEmpty" style="display: none">Tidak ada data laporan untuk tahun ini</div>
           </div>
           <div class="section-title">Distribusi Platform <span id="platformPeriod"></span></div>
           <div class="platform-card card-enter" id="platformCard"></div>
         </div>
 
-        <!-- INVENTARIS -->
+        <!-- TAB: LAPORAN -->
+        <div id="tabLaporan" style="display: none">
+          <div class="kpi-grid" id="laporanSummaryCards" style="margin-bottom: 14px"></div>
+          <div class="section-title">Riwayat Laporan Bulanan <span id="laporanYear"></span></div>
+          <div class="laporan-card" id="laporanTable"></div>
+        </div>
+
+        <!-- TAB: INVENTARIS -->
         <div id="tabStock" style="display: none">
           <div id="stockSummaryCards" class="kpi-grid" style="margin-bottom: 14px"></div>
           <div class="section-title">Level Stok <span id="lowStockCount"></span></div>
           <div class="stock-grid" id="stockGrid"></div>
         </div>
 
-        <!-- PESANAN -->
+        <!-- TAB: PESANAN -->
         <div id="tabOrders" style="display: none">
           <div class="table-card card-enter">
             <div class="table-search">
@@ -939,35 +1106,37 @@
         </div>
       </div>
     </main>
-    <div class="footer">Analytics Pro v3.0 · Data diperbarui setiap kali halaman dimuat</div>
+    <div class="footer">Analytics Pro v3.0 · KPI dari Sheet Laporan · Detail dari Sheet Pesanan</div>
 
     <script>
       // ════════════════════════════════════════════════
       // CONSTANTS
       // ════════════════════════════════════════════════
       const SOURCES = {
+        laporan: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1984546642&single=true&output=csv',
         orders: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=1345114316&single=true&output=csv',
         stock: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=86051744&single=true&output=csv',
-        products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
+        products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
       };
-      const PLATFORM_FEE = 0.15;
+
       const LOW_STOCK_THRESHOLD = 10;
       const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
       const MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
       let state = {
-        raw: { orders: [], stock: [], products: [] },
-        filtered: [],
+        raw: { laporan: [], orders: [], stock: [], products: [] },
+        // laporanMap: { "2026": { "05": {revenue, profit, margin, orders}, ... }, ... }
+        laporanMap: {},
         availableYears: [],
         selectedYear: new Date().getFullYear(),
-        selectedMonth: null, // null = all months of selected year
+        selectedMonth: null, // null = show all months of selectedYear
         trendChart: null,
         txData: [],
         hppMap: {},
       };
 
       // ════════════════════════════════════════════════
-      // PARSERS
+      // PARSERS & FORMATTERS
       // ════════════════════════════════════════════════
       function parseCSV(text) {
         const lines = text.trim().split('\n');
@@ -979,7 +1148,7 @@
             const cols = [];
             let cur = '',
               inQ = false;
-            for (let c of line) {
+            for (const c of line) {
               if (c === '"') {
                 inQ = !inQ;
                 continue;
@@ -1013,24 +1182,123 @@
         return parseFloat(String(v).replace(/[^0-9.\-]/g, '')) || 0;
       }
 
-      // ════════════════════════════════════════════════
-      // FORMATTERS
-      // ════════════════════════════════════════════════
       function fmtIDR(n) {
-        const abs = Math.abs(n);
-        const sign = n < 0 ? '-' : '';
+        const abs = Math.abs(n),
+          sign = n < 0 ? '-' : '';
         if (abs >= 1e9) return sign + 'Rp ' + (abs / 1e9).toFixed(1) + 'M';
         if (abs >= 1e6) return sign + 'Rp ' + (abs / 1e6).toFixed(1) + 'jt';
         if (abs >= 1e3) return sign + 'Rp ' + (abs / 1e3).toFixed(0) + 'rb';
         return sign + 'Rp ' + abs.toFixed(0);
       }
 
-      // process data
       // ════════════════════════════════════════════════
-      // FUNGSI PROSES DATA (TAMBAHKAN INI)
+      // FETCH — 4 sources via Promise.all
+      // ════════════════════════════════════════════════
+      async function fetchAll() {
+        // Reset UI
+        setSyncState('loading');
+        setPillState('laporan', 'loading');
+        setPillState('orders', 'loading');
+        setPillState('stock', 'loading');
+        setPillState('products', 'loading');
+        document.getElementById('loadingState').style.display = 'flex';
+        document.getElementById('dashContent').style.display = 'none';
+        document.getElementById('errorBanner').classList.remove('visible');
+        document.getElementById('loadingText').textContent = 'Mengambil data dari 4 sumber…';
+
+        const proxy = (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+
+        // Fetch each source individually so we can report partial failures
+        const results = await Promise.allSettled([
+          fetch(proxy(SOURCES.laporan)).then((r) => r.text()),
+          fetch(proxy(SOURCES.orders)).then((r) => r.text()),
+          fetch(proxy(SOURCES.stock)).then((r) => r.text()),
+          fetch(proxy(SOURCES.products)).then((r) => r.text()),
+        ]);
+
+        const [laporanResult, ordersResult, stockResult, productsResult] = results;
+        const sourceNames = ['laporan', 'orders', 'stock', 'products'];
+
+        // Set pill states based on individual results
+        results.forEach((r, i) => setPillState(sourceNames[i], r.status === 'fulfilled' ? 'ok' : 'error'));
+
+        // LAPORAN is CRITICAL — hard fail if it doesn't load
+        if (laporanResult.status === 'rejected') {
+          setSyncState('error');
+          showError('<strong>Sheet Laporan gagal dimuat.</strong> Sheet ini wajib ada. Periksa link dan akses publikasi Google Sheets. Detail: ' + laporanResult.reason?.message);
+          return;
+        }
+
+        // Parse all available data
+        state.raw.laporan = parseCSV(laporanResult.value);
+        state.raw.orders = ordersResult.status === 'fulfilled' ? parseCSV(ordersResult.value) : [];
+        state.raw.stock = stockResult.status === 'fulfilled' ? parseCSV(stockResult.value) : [];
+        state.raw.products = productsResult.status === 'fulfilled' ? parseCSV(productsResult.value) : [];
+
+        // Warn if non-critical sources failed
+        const failedNonCritical = ['orders', 'stock', 'products'].filter((_, i) => results[i + 1].status === 'rejected');
+        if (failedNonCritical.length > 0) {
+          showError(`Beberapa sumber gagal dimuat (${failedNonCritical.join(', ')}). Data keuangan tetap akurat dari Sheet Laporan.`);
+        }
+
+        processData();
+        setSyncState('ok');
+        render();
+      }
+
+      // ════════════════════════════════════════════════
+      // PROCESS DATA
       // ════════════════════════════════════════════════
       function processData() {
-        // 1. Pemetaan HPP [cite: 751-752]
+        // 1. BUILD LAPORAN MAP — keyed by year → month (zero-padded)
+        // Expected columns: periode (e.g. "05/2026"), pendapatan/revenue, keuntungan/profit/net_profit, pesanan/orders
+        // Also support: margin (if present)
+        state.laporanMap = {};
+        state.raw.laporan.forEach((row) => {
+          // Try to find the "periode" field — flexible column name detection
+          const periodeRaw = row.periode || row.bulan || row.month || row.period || '';
+          if (!periodeRaw) return;
+
+          let month = null,
+            year = null;
+
+          // Format "MM/YYYY" or "MM-YYYY"
+          const mmyyyy = periodeRaw.match(/^(\d{1,2})[\/\-](\d{4})$/);
+          if (mmyyyy) {
+            month = String(+mmyyyy[1] - 1).padStart(2, '0');
+            year = mmyyyy[2];
+          }
+
+          // Format "YYYY-MM" or "YYYY/MM"
+          const yyyymm = periodeRaw.match(/^(\d{4})[\/\-](\d{1,2})$/);
+          if (yyyymm) {
+            month = String(+yyyymm[2] - 1).padStart(2, '0');
+            year = yyyymm[1];
+          }
+
+          // Format "Month YYYY" e.g. "Januari 2026"
+          if (!month) {
+            const mIdx = MONTHS_FULL.findIndex((m) => periodeRaw.toLowerCase().includes(m.toLowerCase()));
+            const mIdx2 = MONTHS_SHORT.findIndex((m) => periodeRaw.toLowerCase().startsWith(m.toLowerCase()));
+            const yrMatch = periodeRaw.match(/(\d{4})/);
+            if ((mIdx >= 0 || mIdx2 >= 0) && yrMatch) {
+              month = String(mIdx >= 0 ? mIdx : mIdx2).padStart(2, '0');
+              year = yrMatch[1];
+            }
+          }
+
+          if (!month || !year) return;
+
+          const revenue = num(row.pendapatan || row.revenue || row.total_pendapatan || row.total_revenue || 0);
+          const profit = num(row.keuntungan || row.keuntungan_bersih || row.net_profit || row.profit || row.laba_bersih || 0);
+          const orders = num(row.pesanan || row.total_pesanan || row.orders || row.jumlah_pesanan || 0);
+          const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+          if (!state.laporanMap[year]) state.laporanMap[year] = {};
+          state.laporanMap[year][month] = { revenue, profit, margin, orders, raw: row };
+        });
+
+        // 2. HPP MAP — for Orders tab display only (NOT used for KPI calculation)
         state.hppMap = {};
         state.raw.products.forEach((p) => {
           const name = (p.product_name || p.nama_produk || p.name || p.produk || '').toLowerCase();
@@ -1038,7 +1306,9 @@
           if (name) state.hppMap[name] = hpp;
         });
 
-        // 2. Perkaya data order (Enrichment) [cite: 753-755]
+        // 3. ENRICH ORDERS — for platform distribution & transaction list ONLY
+        // NOTE: _netProfit here is only used in the Orders tab for display
+        // Financial KPIs come exclusively from laporanMap
         state.raw.orders = state.raw.orders
           .map((o) => {
             const date = parseDate(o.date || o.tanggal || o.order_date || o.tgl);
@@ -1046,68 +1316,69 @@
             const qty = num(o.qty || o.quantity || o.jumlah || 1);
             const platform = (o.platform || o.source || o.channel || '').toLowerCase();
             const prodKey = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
-
+            // HPP & net profit for Orders tab display only
             let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
             if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
-
-            const platformFee = revenue * PLATFORM_FEE;
-            const netProfit = revenue - hpp - platformFee;
-
-            return {
-              ...o,
-              _date: date,
-              _revenue: revenue,
-              _hpp: hpp,
-              _qty: qty,
-              _platform: platform,
-              _platformFee: platformFee,
-              _netProfit: netProfit,
-            };
+            const _netProfit = revenue - hpp - revenue * 0.15;
+            return { ...o, _date: date, _revenue: revenue, _hpp: hpp, _qty: qty, _platform: platform, _netProfit: _netProfit };
           })
           .filter((o) => o._date && o._revenue > 0);
 
-        // 3. Deteksi tahun yang tersedia & pilih tahun terbaru [cite: 756-757]
-        state.availableYears = [...new Set(state.raw.orders.map((o) => o._date.getFullYear()))].sort((a, b) => a - b);
-        const latestYear = state.availableYears[state.availableYears.length - 1] || new Date().getFullYear();
+        // 4. DETECT AVAILABLE YEARS from laporanMap
+        const laporanYears = Object.keys(state.laporanMap)
+          .map(Number)
+          .sort((a, b) => a - b);
+        const orderYears = [...new Set(state.raw.orders.map((o) => o._date?.getFullYear()).filter(Boolean))].sort((a, b) => a - b);
+        state.availableYears = [...new Set([...laporanYears, ...orderYears])].sort((a, b) => a - b);
+        if (!state.availableYears.length) state.availableYears = [new Date().getFullYear()];
+
+        const latestYear = laporanYears.length > 0 ? laporanYears[laporanYears.length - 1] : state.availableYears[state.availableYears.length - 1];
         state.selectedYear = latestYear;
         state.selectedMonth = null;
 
-        // 4. Bangun UI Periode [cite: 757]
         buildPeriodUI();
       }
-      // =======
+
       // ════════════════════════════════════════════════
-      // FETCH
+      // LAPORAN DATA HELPERS
       // ════════════════════════════════════════════════
-      async function fetchAll() {
-        setSyncState('loading');
-        document.getElementById('loadingState').style.display = 'flex';
-        document.getElementById('dashContent').style.display = 'none';
-        document.getElementById('errorBanner').classList.remove('visible');
 
-        try {
-          // Ambil data langsung dari Google tanpa perantara allorigins
-          const [oRes, sRes, pRes] = await Promise.all([fetch(SOURCES.orders), fetch(SOURCES.stock), fetch(SOURCES.products)]);
+      // Get aggregated financial data for the current selection FROM LAPORAN ONLY
+      function getLaporanData(year, month) {
+        const yearKey = String(year);
+        const yData = state.laporanMap[yearKey] || {};
 
-          // Validasi jika ada link yang tidak bisa diakses (404/500)
-          if (!oRes.ok || !sRes.ok || !pRes.ok) throw new Error('Salah satu link Google Sheet tidak dapat diakses.');
-
-          const [oText, sText, pText] = await Promise.all([oRes.text(), sRes.text(), pRes.text()]);
-
-          state.raw.orders = parseCSV(oText);
-          state.raw.stock = parseCSV(sText);
-          state.raw.products = parseCSV(pText);
-
-          // Proses data (Mapping HPP, dll tetap sama)
-          processData();
-
-          setSyncState('ok');
-          render();
-        } catch (e) {
-          setSyncState('error');
-          showError('Gagal sinkronisasi: ' + e.message);
-          console.error(e);
+        if (month !== null) {
+          // Single month
+          const mKey = String(month).padStart(2, '0');
+          const d = yData[mKey] || null;
+          return d ? { revenue: d.revenue, profit: d.profit, margin: d.margin, orders: d.orders } : { revenue: 0, profit: 0, margin: 0, orders: 0 };
         }
+
+        // Aggregate all months in the year
+        const rows = Object.values(yData);
+        if (!rows.length) return { revenue: 0, profit: 0, margin: 0, orders: 0 };
+        const revenue = rows.reduce((s, r) => s + r.revenue, 0);
+        const profit = rows.reduce((s, r) => s + r.profit, 0);
+        const orders = rows.reduce((s, r) => s + r.orders, 0);
+        const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
+        return { revenue, profit, margin, orders };
+      }
+
+      // Get previous period data FROM LAPORAN
+      function getPrevLaporanData(year, month) {
+        if (month !== null) {
+          const prevMo = month === 0 ? 11 : month - 1;
+          const prevYr = month === 0 ? year - 1 : year;
+          const d = getLaporanData(prevYr, prevMo);
+          if (d.revenue === 0 && d.profit === 0) return null;
+          return { ...d, label: `${MONTHS_FULL[prevMo]} ${prevYr}` };
+        }
+        // Year vs prev year
+        const prevYr = year - 1;
+        const d = getLaporanData(prevYr, null);
+        if (d.revenue === 0 && d.profit === 0) return null;
+        return { ...d, label: `tahun ${prevYr}` };
       }
 
       // ════════════════════════════════════════════════
@@ -1115,18 +1386,20 @@
       // ════════════════════════════════════════════════
       function buildPeriodUI() {
         document.getElementById('yearDisplay').textContent = state.selectedYear;
-        const minYear = state.availableYears[0] || state.selectedYear;
-        const maxYear = state.availableYears[state.availableYears.length - 1] || state.selectedYear;
+        const minYear = state.availableYears[0];
+        const maxYear = state.availableYears[state.availableYears.length - 1];
         document.getElementById('prevYearBtn').disabled = state.selectedYear <= minYear;
         document.getElementById('nextYearBtn').disabled = state.selectedYear >= maxYear;
 
-        // Which months have data for selected year
-        const monthsWithData = new Set(state.raw.orders.filter((o) => o._date.getFullYear() === state.selectedYear).map((o) => o._date.getMonth()));
+        // Months with laporan data for selected year
+        const yearKey = String(state.selectedYear);
+        const laporanMonths = new Set(Object.keys(state.laporanMap[yearKey] || {}).map((k) => parseInt(k, 10)));
+        // Also check orders sheet for fallback month display
+        const orderMonths = new Set(state.raw.orders.filter((o) => o._date?.getFullYear() === state.selectedYear).map((o) => o._date.getMonth()));
 
         const row = document.getElementById('monthChipsRow');
         row.innerHTML = '';
 
-        // "Semua" chip
         const allChip = document.createElement('button');
         allChip.className = 'm-chip' + (state.selectedMonth === null ? ' active' : '');
         allChip.textContent = 'Semua';
@@ -1137,13 +1410,14 @@
         };
         row.appendChild(allChip);
 
-        // Month chips
         MONTHS_SHORT.forEach((m, idx) => {
           const chip = document.createElement('button');
-          const hasData = monthsWithData.has(idx);
-          chip.className = 'm-chip' + (state.selectedMonth === idx ? ' active' : '') + (hasData ? ' has-data' : ' no-data');
+          const hasLaporan = laporanMonths.has(idx);
+          const hasOrders = orderMonths.has(idx);
+          const hasAny = hasLaporan || hasOrders;
+          chip.className = 'm-chip' + (state.selectedMonth === idx ? ' active' : '') + (hasLaporan ? ' has-laporan' : '') + (!hasAny ? ' no-data' : '');
           chip.textContent = m;
-          if (hasData) {
+          if (hasAny) {
             chip.onclick = () => {
               state.selectedMonth = idx;
               buildPeriodUI();
@@ -1153,7 +1427,6 @@
           row.appendChild(chip);
         });
 
-        // Active period banner
         const banner = document.getElementById('activePeriodBar');
         if (state.selectedMonth !== null) {
           banner.style.display = 'flex';
@@ -1180,149 +1453,122 @@
       }
 
       // ════════════════════════════════════════════════
-      // FILTER
-      // ════════════════════════════════════════════════
-      function getFiltered() {
-        return state.raw.orders.filter((o) => {
-          if (!o._date) return false;
-          if (o._date.getFullYear() !== state.selectedYear) return false;
-          if (state.selectedMonth !== null && o._date.getMonth() !== state.selectedMonth) return false;
-          return true;
-        });
-      }
-
-      // MoM: always compare selected month vs previous month (same year, or Dec of prev year)
-      function getPrevPeriodStats() {
-        if (state.selectedMonth === null) {
-          // Year comparison: vs previous year
-          const prevYr = state.selectedYear - 1;
-          const prevOrders = state.raw.orders.filter((o) => o._date?.getFullYear() === prevYr);
-          if (!prevOrders.length) return { prevRevenue: 0, prevProfit: 0, prevMargin: null };
-          const prevRevenue = prevOrders.reduce((s, o) => s + o._revenue, 0);
-          const prevProfit = prevOrders.reduce((s, o) => s + o._netProfit, 0);
-          const prevMargin = prevRevenue > 0 ? (prevProfit / prevRevenue) * 100 : null;
-          return { prevRevenue, prevProfit, prevMargin };
-        }
-        // Month comparison
-        const prevMo = state.selectedMonth === 0 ? 11 : state.selectedMonth - 1;
-        const prevYr = state.selectedMonth === 0 ? state.selectedYear - 1 : state.selectedYear;
-        const prevOrders = state.raw.orders.filter((o) => o._date?.getFullYear() === prevYr && o._date.getMonth() === prevMo);
-        if (!prevOrders.length) return { prevRevenue: 0, prevProfit: 0, prevMargin: null };
-        const prevRevenue = prevOrders.reduce((s, o) => s + o._revenue, 0);
-        const prevProfit = prevOrders.reduce((s, o) => s + o._netProfit, 0);
-        const prevMargin = prevRevenue > 0 ? (prevProfit / prevRevenue) * 100 : null;
-        return { prevRevenue, prevProfit, prevMargin };
-      }
-
-      // ════════════════════════════════════════════════
-      // RENDER
+      // RENDER MASTER
       // ════════════════════════════════════════════════
       function render() {
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('dashContent').style.display = 'block';
 
-        const filtered = getFiltered();
-        state.filtered = filtered;
-
-        const totalRevenue = filtered.reduce((s, o) => s + o._revenue, 0);
-        const totalProfit = filtered.reduce((s, o) => s + o._netProfit, 0);
-        const totalOrders = filtered.length;
-        const margin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
-
-        const { prevRevenue, prevProfit, prevMargin } = getPrevPeriodStats();
-        const momMargin = prevMargin !== null ? margin - prevMargin : null;
-        const momRevenue = prevRevenue > 0 ? ((totalRevenue - prevRevenue) / prevRevenue) * 100 : null;
-
-        const prevPeriodLabel = getPrevPeriodLabel();
-
-        renderKPIs({ totalRevenue, totalProfit, totalOrders, margin, momMargin, momRevenue, prevPeriodLabel });
+        renderKPIs();
         renderTrendChart();
-        renderPlatform(filtered);
+        renderPlatform();
+        renderLaporanTab();
         renderStock();
-        renderTransactions(filtered);
-      }
-
-      function getPrevPeriodLabel() {
-        if (state.selectedMonth === null) return `tahun ${state.selectedYear - 1}`;
-        const prevMo = state.selectedMonth === 0 ? 11 : state.selectedMonth - 1;
-        const prevYr = state.selectedMonth === 0 ? state.selectedYear - 1 : state.selectedYear;
-        return `${MONTHS_FULL[prevMo]} ${prevYr}`;
+        renderTransactions();
       }
 
       // ════════════════════════════════════════════════
-      // KPI CARDS
+      // KPI CARDS — data exclusively from laporanMap
       // ════════════════════════════════════════════════
-      function renderKPIs({ totalRevenue, totalProfit, totalOrders, margin, momMargin, momRevenue, prevPeriodLabel }) {
+      function renderKPIs() {
         const grid = document.getElementById('kpiGrid');
+        const cur = getLaporanData(state.selectedYear, state.selectedMonth);
+        const prev = getPrevLaporanData(state.selectedYear, state.selectedMonth);
 
-        function momBlock(val, prevLabel, suffix = '%', customDesc = null) {
-          if (val === null) {
-            return `<div class="mom-indicator neutral"><span class="mom-arrow">–</span><div class="mom-text"><span class="mom-pct">Tidak ada data</span><span class="mom-desc">bulan sebelumnya</span></div></div>`;
-          }
+        const momRevenue = prev ? ((cur.revenue - prev.revenue) / (prev.revenue || 1)) * 100 : null;
+        const momProfit = prev ? ((cur.profit - prev.profit) / (Math.abs(prev.profit) || 1)) * 100 : null;
+        const momMargin = prev ? cur.margin - prev.margin : null;
+
+        function momBlock(val, prevLabel, suffix = '%', desc = null) {
+          if (val === null) return `<div class="mom-indicator neutral"><span class="mom-arrow">–</span><div class="mom-text"><span class="mom-pct">Tidak ada data</span><span class="mom-desc">periode sebelumnya</span></div></div>`;
           const cls = val >= 0 ? 'up' : 'down';
           const arrow = val >= 0 ? '▲' : '▼';
           const sign = val >= 0 ? '+' : '';
-          const desc = customDesc || (val >= 0 ? `Naik dari ${prevLabel}` : `Turun dari ${prevLabel}`);
-          return `<div class="mom-indicator ${cls}"><span class="mom-arrow">${arrow}</span><div class="mom-text"><span class="mom-pct">${sign}${Math.abs(val).toFixed(1)}${suffix}</span><span class="mom-desc">${desc}</span></div></div>`;
+          const d = desc || (val >= 0 ? `Naik dari ${prevLabel}` : `Turun dari ${prevLabel}`);
+          return `<div class="mom-indicator ${cls}"><span class="mom-arrow">${arrow}</span><div class="mom-text"><span class="mom-pct">${sign}${Math.abs(val).toFixed(1)}${suffix}</span><span class="mom-desc">${d}</span></div></div>`;
+        }
+
+        const pl = prev?.label || '–';
+
+        // Orders count: from laporan if available, else count from orders sheet
+        let ordersCount = cur.orders;
+        if (!ordersCount) {
+          ordersCount = state.raw.orders.filter((o) => {
+            if (!o._date) return false;
+            if (o._date.getFullYear() !== state.selectedYear) return false;
+            if (state.selectedMonth !== null && o._date.getMonth() !== state.selectedMonth) return false;
+            return true;
+          }).length;
         }
 
         grid.innerHTML = `
     <div class="kpi-card revenue card-enter">
+      <div class="kpi-source-tag laporan">📊 Laporan</div>
       <div class="kpi-label">Pendapatan</div>
-      <div class="kpi-value">${fmtIDR(totalRevenue)}</div>
-      ${momBlock(momRevenue, prevPeriodLabel, '%', momRevenue !== null ? (momRevenue >= 0 ? `Naik dari ${prevPeriodLabel}` : `Turun dari ${prevPeriodLabel}`) : null)}
-      <div class="kpi-sub">${totalOrders} pesanan</div>
+      <div class="kpi-value">${fmtIDR(cur.revenue)}</div>
+      ${momBlock(momRevenue, pl, '%')}
+      <div class="kpi-sub">${ordersCount} pesanan</div>
     </div>
     <div class="kpi-card profit card-enter">
+      <div class="kpi-source-tag laporan">📊 Laporan</div>
       <div class="kpi-label">Keuntungan Bersih</div>
-      <div class="kpi-value">${fmtIDR(totalProfit)}</div>
-      ${momBlock(momMargin, prevPeriodLabel, '% margin')}
-      <div class="kpi-sub">Setelah HPP & biaya</div>
+      <div class="kpi-value">${fmtIDR(cur.profit)}</div>
+      ${momBlock(momProfit, pl, '%')}
+      <div class="kpi-sub">Sudah dikurangi HPP & biaya</div>
     </div>
     <div class="kpi-card margin card-enter">
+      <div class="kpi-source-tag laporan">📊 Laporan</div>
       <div class="kpi-label">Margin Bersih</div>
-      <div class="kpi-value sm">${margin.toFixed(1)}%</div>
-      ${momBlock(momMargin, prevPeriodLabel, '%', momMargin !== null ? (momMargin >= 0 ? `Margin naik dari ${prevPeriodLabel}` : `Margin turun dari ${prevPeriodLabel}`) : null)}
+      <div class="kpi-value sm">${cur.margin.toFixed(1)}%</div>
+      ${momBlock(momMargin, pl, '%', momMargin !== null ? (momMargin >= 0 ? `Margin naik dari ${pl}` : `Margin turun dari ${pl}`) : null)}
       <div class="kpi-sub">Keuntungan / Pendapatan</div>
     </div>
     <div class="kpi-card orders card-enter">
+      <div class="kpi-source-tag orders">📦 Pesanan</div>
       <div class="kpi-label">Total Pesanan</div>
-      <div class="kpi-value sm">${totalOrders}</div>
-      <div class="kpi-sub" style="margin-top:12px">Rata-rata ${fmtIDR(totalOrders ? totalRevenue / totalOrders : 0)}/pesanan</div>
-    </div>
-  `;
+      <div class="kpi-value sm">${ordersCount}</div>
+      <div class="kpi-sub" style="margin-top:12px">Rata-rata ${fmtIDR(ordersCount && cur.revenue ? cur.revenue / ordersCount : 0)}/pesanan</div>
+    </div>`;
       }
 
       // ════════════════════════════════════════════════
-      // TREND CHART
+      // TREND CHART — data from laporanMap
       // ════════════════════════════════════════════════
       function renderTrendChart() {
-        const grouped = {};
-        state.raw.orders.forEach((o) => {
-          if (!o._date) return;
-          if (o._date.getFullYear() !== state.selectedYear) return;
-          const key = String(o._date.getMonth()).padStart(2, '0');
-          if (!grouped[key]) grouped[key] = { rev: 0, profit: 0, month: o._date.getMonth() };
-          grouped[key].rev += o._revenue;
-          grouped[key].profit += o._netProfit;
-        });
+        const yearKey = String(state.selectedYear);
+        const yData = state.laporanMap[yearKey] || {};
+        const keys = Object.keys(yData).sort(); // "00","01","02",...
 
-        const keys = Object.keys(grouped).sort();
-        const labels = keys.map((k) => MONTHS_SHORT[grouped[k].month]);
-        const revData = keys.map((k) => grouped[k].rev);
-        const prfData = keys.map((k) => grouped[k].profit);
+        const wrap = document.getElementById('chartWrap');
+        const empty = document.getElementById('chartEmpty');
 
-        // Highlight selected month
+        if (!keys.length) {
+          wrap.style.display = 'none';
+          empty.style.display = 'flex';
+          if (state.trendChart) {
+            state.trendChart.destroy();
+            state.trendChart = null;
+          }
+          return;
+        }
+        wrap.style.display = 'block';
+        empty.style.display = 'none';
+
+        const labels = keys.map((k) => MONTHS_SHORT[parseInt(k, 10)]);
+        const revData = keys.map((k) => yData[k].revenue);
+        const profData = keys.map((k) => yData[k].profit);
+
+        // Highlight selected month bar
         const barColors = keys.map((k) => {
-          const isSelected = state.selectedMonth !== null && grouped[k].month === state.selectedMonth;
+          const isSelected = state.selectedMonth !== null && parseInt(k, 10) === state.selectedMonth;
           return isSelected ? 'rgba(26,26,255,0.30)' : 'rgba(26,26,255,0.10)';
         });
         const barBorders = keys.map((k) => {
-          const isSelected = state.selectedMonth !== null && grouped[k].month === state.selectedMonth;
+          const isSelected = state.selectedMonth !== null && parseInt(k, 10) === state.selectedMonth;
           return isSelected ? 'rgba(26,26,255,1)' : 'rgba(26,26,255,0.5)';
         });
 
-        document.getElementById('chartSubtitle').textContent = state.selectedMonth !== null ? `${MONTHS_FULL[state.selectedMonth]} ${state.selectedYear}` : `Tren ${state.selectedYear}`;
+        document.getElementById('chartSubtitle').textContent = state.selectedMonth !== null ? `${MONTHS_FULL[state.selectedMonth]} ${state.selectedYear} · Sumber: Laporan` : `Tren ${state.selectedYear} · Sumber: Laporan`;
 
         const canvas = document.getElementById('trendChart');
         if (state.trendChart) state.trendChart.destroy();
@@ -1343,7 +1589,7 @@
               },
               {
                 label: 'Keuntungan Bersih',
-                data: prfData,
+                data: profData,
                 backgroundColor: 'rgba(0,196,140,0.15)',
                 borderColor: 'rgba(0,196,140,0.9)',
                 borderWidth: 2,
@@ -1383,9 +1629,10 @@
       }
 
       // ════════════════════════════════════════════════
-      // PLATFORM
+      // PLATFORM — from orders sheet
       // ════════════════════════════════════════════════
-      function renderPlatform(filtered) {
+      function renderPlatform() {
+        const filtered = getFilteredOrders();
         const card = document.getElementById('platformCard');
         const platforms = {};
         filtered.forEach((o) => {
@@ -1406,11 +1653,11 @@
                 const pct = total > 0 ? (data.rev / total) * 100 : 0;
                 const cls = name === 'tiktok' ? 'tiktok' : name === 'shopee' ? 'shopee' : 'other';
                 const lbl = name === 'tiktok' ? 'TT' : name === 'shopee' ? 'Sp' : name.slice(0, 2).toUpperCase();
-                const displayName = name === 'tiktok' ? 'TikTok Shop' : name === 'shopee' ? 'Shopee' : name.charAt(0).toUpperCase() + name.slice(1);
+                const dn = name === 'tiktok' ? 'TikTok Shop' : name === 'shopee' ? 'Shopee' : name.charAt(0).toUpperCase() + name.slice(1);
                 return `
       <div class="platform-row">
         <div class="platform-top">
-          <div class="platform-name"><div class="platform-icon ${cls}">${lbl}</div>${displayName}</div>
+          <div class="platform-name"><div class="platform-icon ${cls}">${lbl}</div>${dn}</div>
           <div class="platform-pct">${pct.toFixed(1)}%</div>
         </div>
         <div class="progress-track"><div class="progress-fill ${cls}" data-w="${pct}"></div></div>
@@ -1418,13 +1665,72 @@
       </div>`;
               })
               .join('')
-          : '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">Tidak ada data untuk periode ini</div>';
+          : '<div style="color:var(--text-muted);font-size:13px;padding:8px 0">Tidak ada data pesanan untuk periode ini</div>';
 
         requestAnimationFrame(() => {
           card.querySelectorAll('.progress-fill').forEach((el) => {
             el.style.width = el.dataset.w + '%';
           });
         });
+      }
+
+      // ════════════════════════════════════════════════
+      // LAPORAN TAB — full year breakdown table
+      // ════════════════════════════════════════════════
+      function renderLaporanTab() {
+        const yearKey = String(state.selectedYear);
+        const yData = state.laporanMap[yearKey] || {};
+        const keys = Object.keys(yData).sort();
+
+        document.getElementById('laporanYear').textContent = state.selectedYear;
+
+        // Summary cards
+        const agg = getLaporanData(state.selectedYear, null);
+        document.getElementById('laporanSummaryCards').innerHTML = `
+    <div class="kpi-card revenue card-enter">
+      <div class="kpi-label">Total Pendapatan ${state.selectedYear}</div>
+      <div class="kpi-value">${fmtIDR(agg.revenue)}</div>
+      <div class="kpi-sub">${keys.length} bulan tercatat</div>
+    </div>
+    <div class="kpi-card profit card-enter">
+      <div class="kpi-label">Total Keuntungan ${state.selectedYear}</div>
+      <div class="kpi-value">${fmtIDR(agg.profit)}</div>
+      <div class="kpi-sub">Margin rata-rata ${agg.margin.toFixed(1)}%</div>
+    </div>`;
+
+        // Detail table
+        const table = document.getElementById('laporanTable');
+        if (!keys.length) {
+          table.innerHTML = '<div class="tx-empty">Tidak ada data laporan untuk tahun ini</div>';
+          return;
+        }
+
+        table.innerHTML = `
+    <div class="laporan-row header">
+      <div>Bulan</div>
+      <div style="text-align:right">Pendapatan</div>
+      <div style="text-align:right">Margin</div>
+    </div>
+    ${keys
+      .map((k) => {
+        const d = yData[k];
+        const mIdx = parseInt(k, 10);
+        const isActive = state.selectedMonth === mIdx;
+        return `
+        <div class="laporan-row" style="${isActive ? 'background:var(--accent-soft)' : ''}" onclick="selectMonthFromTable(${mIdx})" style="cursor:pointer">
+          <div class="laporan-month">${MONTHS_FULL[mIdx]}</div>
+          <div class="laporan-val">${fmtIDR(d.revenue)}</div>
+          <div class="laporan-margin ${d.margin >= 0 ? 'good' : 'bad'}">${d.margin.toFixed(1)}%</div>
+        </div>`;
+      })
+      .join('')}`;
+      }
+
+      function selectMonthFromTable(mIdx) {
+        state.selectedMonth = mIdx;
+        buildPeriodUI();
+        render();
+        switchTab('overview');
       }
 
       // ════════════════════════════════════════════════
@@ -1436,6 +1742,7 @@
         const sumCards = document.getElementById('stockSummaryCards');
 
         if (!stock.length) {
+          sumCards.innerHTML = '';
           grid.innerHTML = '<div style="color:var(--text-muted);font-size:13px;grid-column:span 2;padding:16px">Data stok tidak tersedia</div>';
           return;
         }
@@ -1475,10 +1782,19 @@
       }
 
       // ════════════════════════════════════════════════
-      // TRANSACTIONS
+      // TRANSACTIONS — from orders sheet
       // ════════════════════════════════════════════════
-      function renderTransactions(filtered) {
-        state.txData = [...filtered].sort((a, b) => b._date - a._date);
+      function getFilteredOrders() {
+        return state.raw.orders.filter((o) => {
+          if (!o._date) return false;
+          if (o._date.getFullYear() !== state.selectedYear) return false;
+          if (state.selectedMonth !== null && o._date.getMonth() !== state.selectedMonth) return false;
+          return true;
+        });
+      }
+
+      function renderTransactions() {
+        state.txData = [...getFilteredOrders()].sort((a, b) => b._date - a._date);
         renderTxList(state.txData);
       }
 
@@ -1497,13 +1813,13 @@
             const name = o.product || o.product_name || o.nama_produk || o.item || 'Pesanan';
             const dateStr = o._date ? `${o._date.getDate()} ${MONTHS_SHORT[o._date.getMonth()]} ${o._date.getFullYear()}` : '—';
             const pCls = o._netProfit >= 0 ? 'pos' : 'neg';
-            const displayPlatform = platform === 'tiktok' ? 'TikTok Shop' : platform === 'shopee' ? 'Shopee' : platform;
+            const dn = platform === 'tiktok' ? 'TikTok Shop' : platform === 'shopee' ? 'Shopee' : platform;
             return `
       <div class="tx-item">
         <div class="tx-avatar ${cls}">${icon}</div>
         <div class="tx-body">
           <div class="tx-name">${name}</div>
-          <div class="tx-date">${dateStr} · ${displayPlatform}</div>
+          <div class="tx-date">${dateStr} · ${dn}</div>
         </div>
         <div class="tx-right">
           <div class="tx-amount">${fmtIDR(o._revenue)}</div>
@@ -1537,32 +1853,41 @@
         const lbl = document.getElementById('syncLabel');
         if (s === 'loading') {
           dot.style.cssText = 'background:var(--amber);box-shadow:0 0 0 3px var(--amber-soft)';
-          ind.className = 'sync-indicator loading';
+          ind.className = 'sync-dot loading';
           lbl.textContent = 'Sinkronisasi…';
         } else if (s === 'ok') {
           dot.style.cssText = 'background:var(--green);box-shadow:0 0 0 3px var(--green-soft)';
-          ind.className = 'sync-indicator';
+          ind.className = 'sync-dot';
           lbl.textContent = 'Aktif';
         } else {
           dot.style.cssText = 'background:var(--red);box-shadow:0 0 0 3px var(--red-soft)';
-          ind.className = 'sync-indicator error';
+          ind.className = 'sync-dot error';
           lbl.textContent = 'Error';
         }
       }
 
-      function showError(msg) {
+      function setPillState(source, status) {
+        const pill = document.getElementById('pill-' + source);
+        if (!pill) return;
+        const labels = { laporan: 'Laporan', orders: 'Pesanan', stock: 'Stok', products: 'Produk' };
+        pill.className = 'source-pill ' + status;
+        const statusIcon = { ok: '✓', loading: '…', error: '✗' };
+        pill.innerHTML = `<div class="pill-dot"></div>${labels[source] || source} ${statusIcon[status] || ''}`;
+      }
+
+      function showError(html) {
         document.getElementById('loadingState').style.display = 'none';
         document.getElementById('dashContent').style.display = 'block';
         const b = document.getElementById('errorBanner');
         b.classList.add('visible');
-        document.getElementById('errorMsg').textContent = msg;
+        document.getElementById('errorMsg').innerHTML = html;
       }
 
       function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach((b, i) => {
-          b.classList.toggle('active', ['overview', 'stock', 'orders'][i] === tab);
-        });
+        const tabs = ['overview', 'laporan', 'stock', 'orders'];
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', tabs[i] === tab));
         document.getElementById('tabOverview').style.display = tab === 'overview' ? '' : 'none';
+        document.getElementById('tabLaporan').style.display = tab === 'laporan' ? '' : 'none';
         document.getElementById('tabStock').style.display = tab === 'stock' ? '' : 'none';
         document.getElementById('tabOrders').style.display = tab === 'orders' ? '' : 'none';
       }
