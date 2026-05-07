@@ -1182,16 +1182,20 @@
 
       function num(v) {
         if (v === undefined || v === null || v === '') return 0;
-        return parseFloat(String(v).replace(/[^0-9.\-]/g, '')) || 0;
+        let s = String(v).replace(/[^0-9,\.\-]/g, '');
+        // Jika ada titik DAN koma, atau titik di posisi ribuan, kita bersihkan
+        if (s.includes('.') && s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+        else if (s.includes('.') && s.split('.').pop().length > 2) s = s.replace(/\./g, '');
+        return parseFloat(s) || 0;
       }
 
       function fmtIDR(n) {
-        const abs = Math.abs(n),
+        const abs = Math.round(Math.abs(n)),
           sign = n < 0 ? '-' : '';
         if (abs >= 1e9) return sign + 'Rp ' + (abs / 1e9).toFixed(1) + 'M';
         if (abs >= 1e6) return sign + 'Rp ' + (abs / 1e6).toFixed(1) + 'jt';
-        if (abs >= 1e3) return sign + 'Rp ' + (abs / 1e3).toFixed(0) + 'rb';
-        return sign + 'Rp ' + abs.toFixed(0);
+        if (abs >= 1e3) return sign + 'Rp ' + Math.floor(abs / 1e3) + 'rb';
+        return sign + 'Rp ' + abs;
       }
 
       // ════════════════════════════════════════════════
@@ -1316,16 +1320,20 @@
         // Financial KPIs come exclusively from laporanMap
         state.raw.orders = state.raw.orders
           .map((o) => {
-            const date = parseDate(o.date || o.tanggal || o.order_date || o.tgl);
-            const revenue = num(o.revenue || o.total || o.harga_jual || o.amount || o.sales || 0);
+            const revenuePerUnit = num(o.harga_jual || o.revenue || 0);
             const qty = num(o.qty || o.quantity || o.jumlah || 1);
-            const platform = (o.platform || o.source || o.channel || '').toLowerCase();
-            const prodKey = (o.product || o.product_name || o.nama_produk || o.item || '').toLowerCase();
-            // HPP & net profit for Orders tab display only
-            let hpp = num(o.hpp || o.cost || o.harga_pokok || 0);
-            if (!hpp && state.hppMap[prodKey]) hpp = state.hppMap[prodKey] * qty;
-            const _netProfit = (revenue - hpp - revenue * 0.15) * qty;
-            return { ...o, _date: date, _revenue: revenue, _hpp: hpp, _qty: qty, _platform: platform, _netProfit: _netProfit };
+            const totalRevenue = revenuePerUnit * qty;
+            const platform = (o.platform || '').toLowerCase();
+            const prodKey = (o.product || o.nama_produk || '').toLowerCase();
+
+            // Ambil HPP per unit
+            let hppPerUnit = num(o.hpp || 0);
+            if (!hppPerUnit && state.hppMap[prodKey]) hppPerUnit = state.hppMap[prodKey];
+
+            // Untung Bersih = (Harga - Modal - Admin 15%) * Jumlah
+            const _netProfit = (revenuePerUnit - hppPerUnit - revenuePerUnit * 0.15) * qty;
+
+            return { ...o, _date: date, _revenue: totalRevenue, _qty: qty, _platform: platform, _netProfit: _netProfit };
           })
           .filter((o) => o._date && o._revenue > 0);
 
