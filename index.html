@@ -1122,7 +1122,7 @@
         products: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQziEGXXmGYf5QB39jB8nvzZH0KN6-tAb6dt4LRFIZKCZEbUGUOMCaOeEqSkRPyWM5DCcEwyh4brqA1/pub?gid=0&single=true&output=csv',
       };
 
-      const LOW_STOCK_THRESHOLD = 10;
+      const LOW_STOCK_THRESHOLD = 3;
       const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
       const MONTHS_FULL = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
@@ -1211,23 +1211,25 @@
         document.getElementById('loadingState').style.display = 'flex';
         document.getElementById('dashContent').style.display = 'none';
         document.getElementById('errorBanner').classList.remove('visible');
-        document.getElementById('loadingText').textContent = 'Mengambil data langsung dari Google Sheets…';
+        document.getElementById('loadingText').textContent = 'Mengambil data paling gres dari Google Sheets…';
 
-        // Fetch langsung tanpa PROXY
+        // --- LOGIKA REAL-TIME: Tambahkan Timestamp agar tidak terkena cache ---
+        const ts = new Date().getTime();
+
         const results = await Promise.allSettled([
-          fetch(SOURCES.laporan).then((r) => {
+          fetch(`${SOURCES.laporan}&t=${ts}`).then((r) => {
             if (!r.ok) throw new Error();
             return r.text();
           }),
-          fetch(SOURCES.orders).then((r) => {
+          fetch(`${SOURCES.orders}&t=${ts}`).then((r) => {
             if (!r.ok) throw new Error();
             return r.text();
           }),
-          fetch(SOURCES.stock).then((r) => {
+          fetch(`${SOURCES.stock}&t=${ts}`).then((r) => {
             if (!r.ok) throw new Error();
             return r.text();
           }),
-          fetch(SOURCES.products).then((r) => {
+          fetch(`${SOURCES.products}&t=${ts}`).then((r) => {
             if (!r.ok) throw new Error();
             return r.text();
           }),
@@ -1235,12 +1237,11 @@
 
         const [laporanResult, ordersResult, stockResult, productsResult] = results;
         const sourceNames = ['laporan', 'orders', 'stock', 'products'];
-
         results.forEach((r, i) => setPillState(sourceNames[i], r.status === 'fulfilled' ? 'ok' : 'error'));
 
         if (laporanResult.status === 'rejected') {
           setSyncState('error');
-          showError('<strong>Gagal terhubung ke Google Sheets.</strong> Pastikan file sudah di-Publish to Web sebagai CSV. Detail: Network Error');
+          showError('<strong>Gagal terhubung!</strong> Pastikan file sudah di-Publish to Web sebagai CSV.');
           return;
         }
 
@@ -1320,7 +1321,7 @@
         // Financial KPIs come exclusively from laporanMap
         state.raw.orders = state.raw.orders
           .map((o) => {
-            // BARIS PENTING: Definisi variabel date harus ada di sini!
+            // Definisi tanggal agar filter dashboard tidak error [cite: 495]
             const date = parseDate(o.tanggal || o.date || '');
 
             const revenuePerUnit = num(o.harga_jual || o.revenue || 0);
@@ -1329,15 +1330,24 @@
             const platform = (o.platform || '').toLowerCase();
             const prodKey = (o.product || o.nama_produk || '').toLowerCase();
 
-            // Ambil HPP per unit
+            // Prioritaskan HPP dari baris order (mendukung varian size)
             let hppPerUnit = num(o.hpp || 0);
             if (!hppPerUnit && state.hppMap[prodKey]) hppPerUnit = state.hppMap[prodKey];
 
-            // Untung Bersih = (Harga - Modal - Admin 15%) * Jumlah
-            const _netProfit = (revenuePerUnit - hppPerUnit - revenuePerUnit * 0.15) * qty;
+            // LOGIKA ADMIN FEE: Shopee 22% (0.22), lainnya 15% (0.15) [cite: 218]
+            const adminRate = platform === 'shopee' ? 0.22 : 0.15;
 
-            // Pastiin o._date pake variabel 'date' yang baru kita bikin di atas
-            return { ...o, _date: date, _revenue: totalRevenue, _qty: qty, _platform: platform, _netProfit: _netProfit };
+            // Itung Untung Bersih sesuai realita potongan platform [cite: 219, 497]
+            const _netProfit = (revenuePerUnit - hppPerUnit - revenuePerUnit * adminRate) * qty;
+
+            return {
+              ...o,
+              _date: date,
+              _revenue: totalRevenue,
+              _qty: qty,
+              _platform: platform,
+              _netProfit: _netProfit,
+            };
           })
           .filter((o) => o._date && o._revenue > 0);
 
@@ -1728,19 +1738,21 @@
       <div style="text-align:right">Pendapatan</div>
       <div style="text-align:right">Margin</div>
     </div>
-    ${keys
-      .map((k) => {
-        const d = yData[k];
-        const mIdx = parseInt(k, 10);
-        const isActive = state.selectedMonth === mIdx;
-        return `
-        <div class="laporan-row" style="${isActive ? 'background:var(--accent-soft)' : ''}" onclick="selectMonthFromTable(${mIdx})" style="cursor:pointer">
+   ${keys
+     .map((k) => {
+       const d = yData[k];
+       const mIdx = parseInt(k, 10);
+       const isActive = state.selectedMonth === mIdx;
+       return `
+        <div class="laporan-row" 
+             style="cursor:pointer; ${isActive ? 'background:var(--accent-soft); font-weight:700;' : ''}" 
+             onclick="selectMonthFromTable(${mIdx})">
           <div class="laporan-month">${MONTHS_FULL[mIdx]}</div>
           <div class="laporan-val">${fmtIDR(d.revenue)}</div>
           <div class="laporan-margin ${d.margin >= 0 ? 'good' : 'bad'}">${d.margin.toFixed(1)}%</div>
         </div>`;
-      })
-      .join('')}`;
+     })
+     .join('')}`;
       }
 
       function selectMonthFromTable(mIdx) {
