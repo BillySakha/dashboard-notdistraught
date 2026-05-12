@@ -1264,37 +1264,36 @@
       // PROCESS DATA
       // ════════════════════════════════════════════════
       function processData() {
-        // 1. BUILD LAPORAN MAP — keyed by year → month (zero-padded)
-        // Expected columns: periode (e.g. "05/2026"), pendapatan/revenue, keuntungan/profit/net_profit, pesanan/orders
-        // Also support: margin (if present)
+        // 1. BUILD LAPORAN MAP
         state.laporanMap = {};
         state.raw.laporan.forEach((row) => {
-          // Try to find the "periode" field — flexible column name detection
-          const periodeRaw = row.periode || row.bulan || row.month || row.period || '';
+          // Penambahan Alias Kolom agar lebih "kebal" (case insensitive)
+          const periodeRaw = row.periode || row.bulan || row.month || row.period || row.bulan_tahun || '';
           if (!periodeRaw) return;
 
           let month = null,
             year = null;
+          const cleanPeriode = periodeRaw.trim();
 
-          // Format "MM/YYYY" or "MM-YYYY"
-          const mmyyyy = periodeRaw.match(/^(\d{1,2})[\/\-](\d{4})$/);
+          // Deteksi format MM/YYYY atau MM-YYYY
+          const mmyyyy = cleanPeriode.match(/^(\d{1,2})[\/\-](\d{4})$/);
           if (mmyyyy) {
             month = String(+mmyyyy[1] - 1).padStart(2, '0');
             year = mmyyyy[2];
           }
 
-          // Format "YYYY-MM" or "YYYY/MM"
-          const yyyymm = periodeRaw.match(/^(\d{4})[\/\-](\d{1,2})$/);
+          // Deteksi format YYYY-MM
+          const yyyymm = cleanPeriode.match(/^(\d{4})[\/\-](\d{1,2})$/);
           if (yyyymm) {
             month = String(+yyyymm[2] - 1).padStart(2, '0');
             year = yyyymm[1];
           }
 
-          // Format "Month YYYY" e.g. "Januari 2026"
+          // Deteksi format Nama Bulan (Indo/Inggris)
           if (!month) {
-            const mIdx = MONTHS_FULL.findIndex((m) => periodeRaw.toLowerCase().includes(m.toLowerCase()));
-            const mIdx2 = MONTHS_SHORT.findIndex((m) => periodeRaw.toLowerCase().startsWith(m.toLowerCase()));
-            const yrMatch = periodeRaw.match(/(\d{4})/);
+            const mIdx = MONTHS_FULL.findIndex((m) => cleanPeriode.toLowerCase().includes(m.toLowerCase()));
+            const mIdx2 = MONTHS_SHORT.findIndex((m) => cleanPeriode.toLowerCase().startsWith(m.toLowerCase()));
+            const yrMatch = cleanPeriode.match(/(\d{4})/);
             if ((mIdx >= 0 || mIdx2 >= 0) && yrMatch) {
               month = String(mIdx >= 0 ? mIdx : mIdx2).padStart(2, '0');
               year = yrMatch[1];
@@ -1303,69 +1302,59 @@
 
           if (!month || !year) return;
 
-          // Tambahkan row.total_pendapatan_kotor
-          const revenue = num(row.total_pendapatan_kotor || row.pendapatan || row.revenue || row.total_pendapatan || row.total_revenue || 0);
-          const profit = num(row.keuntungan || row.keuntungan_bersih || row.net_profit || row.profit || row.laba_bersih || 0);
-          const orders = num(row.pesanan || row.total_pesanan || row.orders || row.jumlah_pesanan || 0);
+          const revenue = num(row.total_pendapatan_kotor || row.pendapatan || row.revenue || 0);
+          const profit = num(row.keuntungan_bersih || row.keuntungan || row.net_profit || 0);
+          const orders = num(row.pesanan || row.total_pesanan || row.orders || 0);
           const margin = revenue > 0 ? (profit / revenue) * 100 : 0;
 
           if (!state.laporanMap[year]) state.laporanMap[year] = {};
           state.laporanMap[year][month] = { revenue, profit, margin, orders, raw: row };
         });
 
-        // 2. HPP MAP — for Orders tab display only (NOT used for KPI calculation)
+        // 2. HPP MAP
         state.hppMap = {};
         state.raw.products.forEach((p) => {
-          const name = (p.product_name || p.nama_produk || p.name || p.produk || '').toLowerCase();
-          const hpp = num(p.hpp || p.cost || p.cogs || p.harga_pokok || 0);
+          const name = (p.nama_produk || p.product_name || p.name || '').toLowerCase().trim();
+          const hpp = num(p.hpp || p.cost || 0);
           if (name) state.hppMap[name] = hpp;
         });
 
-        // 3. ENRICH ORDERS — for platform distribution & transaction list ONLY
-        // NOTE: _netProfit here is only used in the Orders tab for display
-        // Financial KPIs come exclusively from laporanMap
+        // 3. ENRICH ORDERS
         state.raw.orders = state.raw.orders
           .map((o) => {
-            // Definisi tanggal agar filter dashboard tidak error [cite: 495]
             const date = parseDate(o.tanggal || o.date || '');
-
             const revenuePerUnit = num(o.harga_jual || o.revenue || 0);
             const qty = num(o.qty || o.quantity || o.jumlah || 1);
             const totalRevenue = revenuePerUnit * qty;
             const platform = (o.platform || '').toLowerCase();
-            const prodKey = (o.product || o.nama_produk || '').toLowerCase();
+            const prodKey = (o.nama_produk || o.product || '').toLowerCase().trim();
 
-            // Prioritaskan HPP dari baris order (mendukung varian size)
             let hppPerUnit = num(o.hpp || 0);
             if (!hppPerUnit && state.hppMap[prodKey]) hppPerUnit = state.hppMap[prodKey];
 
-            // LOGIKA ADMIN FEE: Shopee 22% (0.22), lainnya 15% (0.15) [cite: 218]
             const adminRate = platform === 'shopee' ? 0.22 : 0.15;
-
-            // Itung Untung Bersih sesuai realita potongan platform [cite: 219, 497]
             const _netProfit = (revenuePerUnit - hppPerUnit - revenuePerUnit * adminRate) * qty;
 
-            return {
-              ...o,
-              _date: date,
-              _revenue: totalRevenue,
-              _qty: qty,
-              _platform: platform,
-              _netProfit: _netProfit,
-            };
+            return { ...o, _date: date, _revenue: totalRevenue, _qty: qty, _platform: platform, _netProfit: _netProfit };
           })
-          .filter((o) => o._date && o._revenue > 0);
+          // Filter ini yang sering bikin Pesanan Hilang: Kalau tanggal gak kebaca, data di-hide.
+          // Kita buat lebih longgar:
+          .filter((o) => o._revenue > 0);
 
-        // 4. DETECT AVAILABLE YEARS from laporanMap
+        // 4. DETECT AVAILABLE YEARS
         const laporanYears = Object.keys(state.laporanMap)
           .map(Number)
           .sort((a, b) => a - b);
         const orderYears = [...new Set(state.raw.orders.map((o) => o._date?.getFullYear()).filter(Boolean))].sort((a, b) => a - b);
-        state.availableYears = [...new Set([...laporanYears, ...orderYears])].sort((a, b) => a - b);
-        if (!state.availableYears.length) state.availableYears = [new Date().getFullYear()];
 
-        const latestYear = laporanYears.length > 0 ? laporanYears[laporanYears.length - 1] : state.availableYears[state.availableYears.length - 1];
-        state.selectedYear = latestYear;
+        state.availableYears = [...new Set([...laporanYears, ...orderYears])].sort((a, b) => a - b);
+
+        if (!state.availableYears.length) {
+          state.availableYears = [new Date().getFullYear()];
+        }
+
+        // Pilih tahun terbaru yang ADA datanya
+        state.selectedYear = state.availableYears[state.availableYears.length - 1];
         state.selectedMonth = null;
 
         buildPeriodUI();
