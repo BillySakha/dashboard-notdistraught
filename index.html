@@ -1778,18 +1778,18 @@
 
         const items = stock
           .map((s) => {
-            // Ambil nama dasar produk
+            // 1. Ambil nama dasar produk
             const baseName = s.nama_produk || s.product_name || s.name || s.produk || s.item || 'Tidak diketahui';
 
-            // Ambil info varian dari kolom CSV (pastikan nama kolom di Sheets sesuai) [cite: 456]
+            // 2. Ambil info size (CSV parser lo otomatis ubah spasi jadi underscore & lowercase)
             const size = s.varian_size || s.size || '';
-            const color = s.varian_warna || s.warna || s.color || '';
 
-            // Gabungkan jadi: Nama Produk (Size · Warna)
-            const name = `${baseName} [${size}${color ? ' · ' + color : ''}]`;
+            // 3. Gabungkan jadi: Nama Produk [Size]
+            // Kalau size ada isinya, tampilin. Kalau kosong, tampil nama aja.
+            const name = size ? `${baseName} [${size}]` : baseName;
 
             const qty = num(s.stok_sisa || s.stock || s.qty || s.quantity || s.stok || s.jumlah || 0);
-            const isLow = qty <= LOW_STOCK_THRESHOLD; // [cite: 590]
+            const isLow = qty <= LOW_STOCK_THRESHOLD;
             const barPct = Math.min(100, (qty / 100) * 100);
 
             return { name, qty, isLow, barPct };
