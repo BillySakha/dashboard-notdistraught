@@ -1128,7 +1128,7 @@
 
       let state = {
         raw: { laporan: [], orders: [], stock: [], products: [] },
-        // laporanMap: { "2026": { "05": {revenue, profit, margin, orders}, ... }, ... }
+        isSyncing: false, // <-- Tambahin ini buat jadi "satpam" sinkronisasi
         laporanMap: {},
         availableYears: [],
         selectedYear: new Date().getFullYear(),
@@ -1202,7 +1202,11 @@
       // FETCH — 4 sources via Promise.all
       // ════════════════════════════════════════════════
       async function fetchAll() {
-        // Reset UI
+        // 1. CEK: Kalau lagi proses ambil data, jangan boleh klik lagi [cite: 469]
+        if (state.isSyncing) return;
+        state.isSyncing = true;
+
+        // Reset UI [cite: 469-470]
         setSyncState('loading');
         setPillState('laporan', 'loading');
         setPillState('orders', 'loading');
@@ -1213,46 +1217,47 @@
         document.getElementById('errorBanner').classList.remove('visible');
         document.getElementById('loadingText').textContent = 'Mengambil data paling gres dari Google Sheets…';
 
-        // --- LOGIKA REAL-TIME: Tambahkan Timestamp agar tidak terkena cache ---
+        // --- LOGIKA REAL-TIME: Timestamp & No-Cache [cite: 471] ---
         const ts = new Date().getTime();
+        const fetchOptions = { cache: 'no-store' };
+        // Maksa browser narik data baru, bukan dari memori [cite: 472]
 
-        const results = await Promise.allSettled([
-          fetch(`${SOURCES.laporan}&t=${ts}`).then((r) => {
-            if (!r.ok) throw new Error();
-            return r.text();
-          }),
-          fetch(`${SOURCES.orders}&t=${ts}`).then((r) => {
-            if (!r.ok) throw new Error();
-            return r.text();
-          }),
-          fetch(`${SOURCES.stock}&t=${ts}`).then((r) => {
-            if (!r.ok) throw new Error();
-            return r.text();
-          }),
-          fetch(`${SOURCES.products}&t=${ts}`).then((r) => {
-            if (!r.ok) throw new Error();
-            return r.text();
-          }),
-        ]);
+        try {
+          const results = await Promise.allSettled([
+            fetch(`${SOURCES.laporan}&t=${ts}`, fetchOptions).then((r) => (r.ok ? r.text() : Promise.reject())),
+            fetch(`${SOURCES.orders}&t=${ts}`, fetchOptions).then((r) => (r.ok ? r.text() : Promise.reject())),
+            fetch(`${SOURCES.stock}&t=${ts}`, fetchOptions).then((r) => (r.ok ? r.text() : Promise.reject())),
+            fetch(`${SOURCES.products}&t=${ts}`, fetchOptions).then((r) => (r.ok ? r.text() : Promise.reject())),
+          ]);
 
-        const [laporanResult, ordersResult, stockResult, productsResult] = results;
-        const sourceNames = ['laporan', 'orders', 'stock', 'products'];
-        results.forEach((r, i) => setPillState(sourceNames[i], r.status === 'fulfilled' ? 'ok' : 'error'));
+          const [laporanResult, ordersResult, stockResult, productsResult] = results;
+          const sourceNames = ['laporan', 'orders', 'stock', 'products'];
 
-        if (laporanResult.status === 'rejected') {
+          // Update indikator pil status [cite: 476]
+          results.forEach((r, i) => setPillState(sourceNames[i], r.status === 'fulfilled' ? 'ok' : 'error'));
+
+          if (laporanResult.status === 'rejected') {
+            setSyncState('error');
+            showError('<strong>Gagal terhubung!</strong> Pastikan file sudah di-Publish to Web sebagai CSV.');
+            return;
+          }
+
+          // Parse data ke state [cite: 479-480]
+          state.raw.laporan = parseCSV(laporanResult.value);
+          state.raw.orders = ordersResult.status === 'fulfilled' ? parseCSV(ordersResult.value) : [];
+          state.raw.stock = stockResult.status === 'fulfilled' ? parseCSV(stockResult.value) : [];
+          state.raw.products = productsResult.status === 'fulfilled' ? parseCSV(productsResult.value) : [];
+
+          processData();
+          setSyncState('ok');
+          render();
+        } catch (err) {
+          console.error('Sync Error:', err);
           setSyncState('error');
-          showError('<strong>Gagal terhubung!</strong> Pastikan file sudah di-Publish to Web sebagai CSV.');
-          return;
+        } finally {
+          // 2. SELESAI: Buka kunci biar tombol refresh bisa diklik lagi [cite: 480]
+          state.isSyncing = false;
         }
-
-        state.raw.laporan = parseCSV(laporanResult.value);
-        state.raw.orders = ordersResult.status === 'fulfilled' ? parseCSV(ordersResult.value) : [];
-        state.raw.stock = stockResult.status === 'fulfilled' ? parseCSV(stockResult.value) : [];
-        state.raw.products = productsResult.status === 'fulfilled' ? parseCSV(productsResult.value) : [];
-
-        processData();
-        setSyncState('ok');
-        render();
       }
 
       // ════════════════════════════════════════════════
