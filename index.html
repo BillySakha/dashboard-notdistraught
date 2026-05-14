@@ -1190,12 +1190,13 @@
       }
 
       function fmtIDR(n) {
-        const abs = Math.round(Math.abs(n)),
-          sign = n < 0 ? '-' : '';
-        if (abs >= 1e9) return sign + 'Rp ' + (abs / 1e9).toFixed(1) + 'M';
-        if (abs >= 1e6) return sign + 'Rp ' + (abs / 1e6).toFixed(1) + 'jt';
-        if (abs >= 1e3) return sign + 'Rp ' + Math.floor(abs / 1e3) + 'rb';
-        return sign + 'Rp ' + abs;
+        // Ambil angka mutlak dan bulatkan ke satuan terdekat biar gak ada desimal sisa
+        const abs = Math.round(Math.abs(n));
+        const sign = n < 0 ? '-' : '';
+
+        // toLocaleString('id-ID') otomatis kasih titik ribuan (Rp 1.650.000)
+        // Tanpa dibagi 1e6 atau 1e3 agar angka muncul utuh sesuai Sheets
+        return sign + 'Rp ' + abs.toLocaleString('id-ID');
       }
 
       // ════════════════════════════════════════════════
